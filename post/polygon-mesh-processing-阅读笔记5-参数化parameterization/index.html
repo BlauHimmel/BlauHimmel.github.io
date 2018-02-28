@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <meta charset="utf-8" />
+
+  
+  <title>Polygon Mesh Processing 阅读笔记(5) 参数化(Parameterization)</title>
+
+  
+  
+
+
+
+
+
+  
+  <meta name="author" content="BlauHimmel" />
+  <meta name="description" content="
+" />
+
+  
+  
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:site" content="@zhouyuming1104" />
+    <meta name="twitter:title" content="Polygon Mesh Processing 阅读笔记(5) 参数化(Parameterization)" />
+    <meta name="twitter:description" content="
+" />
+    <meta name="twitter:image" content="https://BlauHimmel.github.io/img/avatar.jpg" />
+  
+
+  
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="Polygon Mesh Processing 阅读笔记(5) 参数化(Parameterization)" />
+  <meta property="og:description" content="
+" />
+  <meta property="og:url" content="https://BlauHimmel.github.io/post/polygon-mesh-processing-%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B05-%E5%8F%82%E6%95%B0%E5%8C%96parameterization/" />
+  <meta property="og:image" content="https://BlauHimmel.github.io/img/avatar.jpg" />
+
+
+
+
+<meta name="generator" content="Hugo 0.37" />
+
+
+<link rel="canonical" href="https://BlauHimmel.github.io/post/polygon-mesh-processing-%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B05-%E5%8F%82%E6%95%B0%E5%8C%96parameterization/" />
+<link rel="alternative" href="https://BlauHimmel.github.io/index.xml" title="BlauHimmel&#39;s Blog" type="application/atom+xml" />
+
+
+<meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta name="format-detection" content="telephone=no,email=no,adress=no" />
+<meta http-equiv="Cache-Control" content="no-transform" />
+
+
+<meta name="robots" content="index,follow" />
+<meta name="referrer" content="origin-when-cross-origin" />
+
+
+
+
+
+
+
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="BlauHimmel&#39;s Blog" />
+<meta name="msapplication-tooltip" content="BlauHimmel&#39;s Blog" />
+<meta name='msapplication-navbutton-color' content="#5fbf5e" />
+<meta name="msapplication-TileColor" content="#5fbf5e" />
+<meta name="msapplication-TileImage" content="/img/tile-image-windows.png" />
+<link rel="icon" href="https://BlauHimmel.github.io/img/favicon.ico" />
+<link rel="icon" type="image/png" sizes="16x16" href="https://BlauHimmel.github.io/img/favicon-16x16.png" />
+<link rel="icon" type="image/png" sizes="32x32" href="https://BlauHimmel.github.io/img/favicon-32x32.png" />
+<link rel="icon" sizes="192x192" href="https://BlauHimmel.github.io/img/touch-icon-android.png" />
+<link rel="apple-touch-icon" href="https://BlauHimmel.github.io/img/touch-icon-apple.png" />
+<link rel="mask-icon" href="https://BlauHimmel.github.io/img/safari-pinned-tab.svg" color="#5fbf5e" />
+
+
+
+<link rel="stylesheet" href="//cdn.bootcss.com/video.js/6.2.8/alt/video-js-cdn.min.css" />
+
+<link rel="stylesheet" href="https://BlauHimmel.github.io/css/bundle.css" />
+
+
+  
+  <!--[if lt IE 9]>
+    <script src="//cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="//cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <script src="//cdn.bootcss.com/video.js/6.2.8/ie8/videojs-ie8.min.js"></script>
+  <![endif]-->
+
+<!--[if lte IE 11]>
+    <script src="//cdn.bootcss.com/classlist/1.1.20170427/classList.min.js"></script>
+  <![endif]-->
+
+
+<script src="//cdn.bootcss.com/object-fit-images/3.2.3/ofi.min.js"></script>
+
+
+<script src="//cdn.bootcss.com/smooth-scroll/12.1.4/js/smooth-scroll.polyfills.min.js"></script>
+
+
+</head>
+  <body>
+    
+    <div class="suspension">
+      <a title="Go to top" class="to-top is-hide"><span class="icon icon-up"></span></a>
+      
+        
+      
+    </div>
+    
+    
+  <header class="site-header">
+  <img class="avatar" src="https://BlauHimmel.github.io/img/avatar.png" alt="Avatar">
+  
+  <h2 class="title">BlauHimmel&#39;s Blog</h2>
+  
+  <p class="subtitle">A lazy programmer who is interested in game developing and computer graphic...</p>
+  <button class="menu-toggle" type="button">
+    <span class="icon icon-menu"></span>
+  </button>
+  <nav class="site-menu collapsed">
+    <h2 class="offscreen">Main Menu</h2>
+    <ul class="menu-list">
+      
+      
+      
+      
+        <li class="menu-item
+            
+            
+            
+              is-active
+            ">
+            <a href="https://BlauHimmel.github.io/">Home</a>
+          </li>
+      
+        <li class="menu-item
+            
+            
+            ">
+            <a href="https://BlauHimmel.github.io/tags/">Tags</a>
+          </li>
+      
+        <li class="menu-item
+            
+            
+            ">
+            <a href="https://BlauHimmel.github.io/about/">About</a>
+          </li>
+      
+    </ul>
+  </nav>
+  <nav class="social-menu collapsed">
+    <h2 class="offscreen">Social Networks</h2>
+    <ul class="social-list">
+
+      
+      <li class="social-item">
+        <a href="mailto:zhouyuming1104@qq.com" title="Email"><span class="icon icon-email"></span></a>
+      </li>
+
+      
+      <li class="social-item">
+        <a href="//github.com/BlauHimmel" title="GitHub"><span class="icon icon-github"></span></a>
+      </li>
+
+      <li class="social-item">
+        <a href="//twitter.com/zhouyuming1104" title="Twitter"><span class="icon icon-twitter"></span></a>
+      </li>
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <li class="social-item">
+        <a href="https://BlauHimmel.github.io/index.xml"><span class="icon icon-rss" title="RSS"></span></a>
+      </li>
+
+    </ul>
+  </nav>
+</header>
+
+  <section class="main post-detail">
+    <header class="post-header">
+      <h1 class="post-title">Polygon Mesh Processing 阅读笔记(5) 参数化(Parameterization)</h1>
+      <p class="post-meta">@BlauHimmel · Feb 28, 2018 · 1 min read</p>
+    </header>
+    <article class="post-content"><p></p>
+
+<p>参数化的主要目标是将复杂的3维模型转换到2维空间上。对于一个三角形网格模型，就是把它拍平到一个平面上。</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/6808438-5621d01d2f5fad93.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="" /></p>
+
+<p>从数学上解释，对三角形网格参数化的过程就是寻找一种映射，它能够把网格的每一个顶点 <em>i</em> 映射到( <em>u</em> i,  <em>v</em> i)上。需要注意的一点是，经过映射后，任意两个三角形公共的部分只有可能是：一条边，一个顶点或者不存在。</p>
+
+<h2 id="重心映射-barycentric-mapping">重心映射（Barycentric Mapping）</h2>
+
+<p>重心映射是一种在三角化网格中比较常用的参数的方法。使用这种方法的网格必须满足下面的条件：</p>
+
+<ul>
+<li>三角形网格与圆盘是同胚的（简单地说就是网格必须有边界并且不能有洞），并且网格的边界在一个凸多边形上，同时内部的顶点是其周围顶点的凸组合。</li>
+</ul>
+
+<p>假设顶点的索引按照{内部的顶点(1到n)，边界上的顶点(n+1到N)}排列，那么，对于任取实数λ，满足：</p>
+
+
+<figure>
+    
+        <img src="http://upload-images.jianshu.io/upload_images/6808438-cf824d334918b063.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" />
+    
+    
+    <figcaption>
+        <h4>其中(i,j)∈E表示点i和点j相邻</h4>
+        
+    </figcaption>
+    
+</figure>
+
+
+<p>然后将处于边界的点(索引为n+1到N的点)固定，用下面的线性方程去更新处于内部的顶点：</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/6808438-03a425a70b897f85.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="" /></p>
+
+<p>写成矩阵的形式就是要分别求解下面两个方程</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/6808438-7d6ecb210ecf4d81.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="" /></p>
+
+<p>而矩阵A的元素aij的取法有一般常见的有三种，其中最简单的一种是当下标i和j不相等的时候取1，下标i和j相等的时候取顶点i周围顶点个数的相反数。这种取法的优势是简单并且计算较快，缺点是没有考虑到网格的集合属性，例如边的长度和三角形的角度，所以会不可避免地产生形变。</p>
+
+<p>另一种方法就是使用下面的cotangent形式</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/6808438-3c3b73120ddefd3c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="" /></p>
+
+<p>其中αij，βij以及Ai的含义如下图所示</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/6808438-6b66953d818fd11d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="" /></p>
+
+<p>如果αij+βij &gt; π，那么cotangent形式就有可能出现负数。可以通过将网格面进行分割来解决这个问题，也可以使用下面这种取法来解决</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/6808438-55e620bffef03554.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="" /></p>
+
+<p>其中γij和δij的含义如下图所示</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/6808438-606229ee3bd5fafe.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="" /></p>
+
+<p>无论使用上面哪种方法，都需要手动指定并固定网格的边界，但是对于一个模型往往选取边界不是一件容易的事情。边界的选取与固定会影响到参数化的结果。</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/6808438-cda8d967bb322215.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="" /></p>
+
+<h2 id="保角映射-conformal-mapping">保角映射（Conformal Mapping）</h2>
+
+<p>对于保角度映射，引用之前用到的例子：假设参数空间( <em>u</em> , <em>v</em> )上存在一个小圆，使用保角映射将它变换到3维坐标空间之后，其沿着u和v方向的切向量 <strong>x</strong> u和 <strong>x</strong> v的模长应该同样地是相等并且 <strong>x</strong> u和 <strong>x</strong> v正交。对于此变化的逆变化，即从3维坐标空间变换为2维参数空间也同样成立。</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/6808438-0e0d85e1800cd7e8.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="" /></p>
+
+<p>与之前讨论梯度时的情况不同，参数化的函数是一个从3维曲面到平面的映射。</p>
+
+<p>为了定义这个函数的梯度，对于每一个三角形，选择一个顶点，并以该顶点为原点建立一组正交基</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/6808438-97d98081517f83df.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="" /></p>
+
+<p>在这样一组基向量下，函数的梯度的定义是：</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/6808438-e48e03066b83e77b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="" /></p>
+
+<p>其中对于每一个三角形矩阵 <strong>M</strong> 是一个常数，A代表了三角形的面积。由于保角映射的逆映射同样也是保角的，并且参数空间下u和v分量的基向量是垂直的，所以：</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/6808438-f84a4213876d743b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="" /></p>
+
+<p>也可以用矩阵的形式来表示</p>
+
+
+<figure>
+    
+        <img src="http://upload-images.jianshu.io/upload_images/6808438-9650710c3821c716.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" />
+    
+    
+    <figcaption>
+        <h4>垂直符号代表向量沿着顺时针的方向以法向量为轴旋转得到的新向量</h4>
+        
+    </figcaption>
+    
+</figure>
+
+
+<p>然后将之前求得的梯度带入到上面的式子中，得到：</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/6808438-5322326d0a62a50b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="" /></p>
+
+<p>在连续集上，黎曼几何阐述了一个事实：任何的曲面都能够进行保角参数化。</p>
+
+<p>但是，在分片线性函数表示的三角形网格中，只有 <strong>可展曲面(Developable Surface)</strong> 才能进行保角参数化。对于一般的曲面（非可展曲面），上式子就不能成立，即梯度向量u和v不一定是垂直的，但是要尽可能地让它们垂直，所以将上面的式子改写为下面的最小二乘的形式</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/6808438-a12bf1b671ce222a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="" /></p>
+
+<p>上面的方程被称为 <em>保角能量(Conformal Energy)</em> ，注意到保角能量的值不会受到参数空间的平移和旋转变换的影响，所以并不存在唯一的最小解，一般在实际应用的时候会 <strong>至少固定两个点</strong> ( <em>u</em> ,  <em>v</em> )的位置，然后再去求其最小值。</p>
+
+<hr />
+
+<p>在之前进行曲面平滑（Smoothing）的过程中，为了让曲面变得更平滑，在边界固定的情况下考虑最小化曲面的面积。由于求曲面的面积的方程中包含了平方根和第一基本型，是高度非线性化的，为了简化运算引入了 <em>狄利特雷能量（Dirichlet&rsquo;s Energy）</em> 的概念。</p>
+
+<p>而在保角映射中使用到了 <em>保角能量(Conformal Energy)</em> 的概念，当保角能量为0的时候说明该参数化的过程是保角的。</p>
+
+<p>而上述的3个量存在下面的关系</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/6808438-c8fcdce6fad0c808.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="" /></p>
+
+<p>这个式子很容易推导，只需要将等号两边的积分展开就能证明。</p>
+
+<p>曲面平滑的过程中最小化了狄利特雷能量，而在上面的保角映射的过程中使用了最小二乘的思想来最小化保角能量。因为这两个量之间只相差了曲面面积，所以从某种角度上来说，这两种方法是等价的。</p>
+
+<h2 id="基于几何方法的保角映射">基于几何方法的保角映射</h2>
+
+<p>以上所讨论的都是基于分析的方法，基于分析的方法是易于实现的，因为它需要的只是最小化一个二次的方程。</p>
+
+<p>但是上面的方法均需要固定至少两个顶点，而这将可能会导致变形，如下图所示</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/6808438-9e499f6d24f03c09.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="" /></p>
+
+<p>对于一个高斯曲率较高的曲面，上述包角变换的方法往往会造成诸如左图那样的变形，而用户期望的结果一般是像右图那样的。</p>
+
+<p>下面介绍一种基于角度的拍平化算法—— <strong>angle-based flattening（ABF）</strong>。</p>
+
+<p>由于参数空间是一个2维的三角剖分(Triangulation)，并且由某一个顶点周围所有的角唯一地定义，所以可以重新定义解决参数化的问题的思路，即通过角来寻找顶点的坐标( <em>u</em> , <em>v</em> )。</p>
+
+<p>ABF方法是通过最小化下面的能量来寻找参数化的结果的：</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/6808438-3ed372073babf228.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="" /></p>
+
+<p>其中α与β项表示与顶点 <em>k</em> 相邻的，处于三角形T中角度的大小，α表示的参数化平面上的角度而β表示的是原来3D网格上对应位置的角度。</p>
+
+<p>为了保证得到的角度α所定义的三角剖分是合法的，需要对其施加一定的限制条件：</p>
+
+<ul>
+<li>同一个三角形的内角和必须为180°</li>
+</ul>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/6808438-f83da39faf11e0e3.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="" /></p>
+
+<ul>
+<li>对于处于内部的顶点，其周围相邻的角的度数之和为360°</li>
+</ul>
+
+
+<figure>
+    
+        <img src="http://upload-images.jianshu.io/upload_images/6808438-8103b576183944c0.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" />
+    
+    
+    <figcaption>
+        <h4>Vint表示非边界上的点的集合，v*表示与顶点v相邻角度的集合</h4>
+        
+    </figcaption>
+    
+</figure>
+
+
+<ul>
+<li>对于处于内部的顶点，其周围相邻的角对应所处的三角形中的下一个角的正弦值的积等于其周围相邻的角对应所处的三角形中的上一个角的正弦值的积（要统一好三角形中角的顺序）。</li>
+</ul>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/6808438-c8c9d3f449bd3ea8.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="" /></p>
+
+<h2 id="基于形变分析的方法">基于形变分析的方法</h2>
+
+<p>进行纹理映射的时候，如何减小形变是一个非常重要的问题。</p>
+
+<p>首先考虑这么一个问题，两个切向量从参数空间变换到曲面上的时候，量向量的夹角一般会用下面的方法进行计算</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/6808438-820d1ade29d256e9.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="" /></p>
+
+<p>当第一基本型是单位矩阵的倍数或者奇异值相同的时候，向量的角度得到了保留。当所有的顶点都这样的时候，这个变换就可以说是 <strong>保角(angle-preserving or conformal)</strong> 的。</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/6808438-0e0d85e1800cd7e8.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="" /></p>
+
+<p>这个时候，圆形变换之后还是圆形，不过它的半径可能会发生改变。</p>
+
+<p>通过观察计算曲面某区域面积的时候用到的公式</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/6808438-060c11df0cd56aa1.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="" /></p>
+
+<p>可以发现当第一基本型行列式的值为1或者所有奇异值相乘结果为1的时候，圆形的面积在变换后不会发生变化，这个时称变换是 <strong>保面(area-preserving or equiareal)</strong> 的。</p>
+
+<p>当上述条件同时满足，即第一基本型是单位矩阵或者奇异值为1的时候，则称变换是 <strong>等距(length-preserving or isometric)的</strong> 。因为在这种变换中角度和面积都没有发生变形，是一种比较理想的情况，只有一些特殊的曲面，如 <strong>可展曲面(developable surfaces)</strong> 才能满足，因为这种曲面的高斯曲率处处为零(参考：<a href="https://en.wikipedia.org/wiki/Theorema_Egregium">Theorema Egregium</a>，<a href="https://baike.baidu.com/item/%E9%AB%98%E6%96%AF%E7%BB%9D%E5%A6%99%E5%AE%9A%E7%90%86/18910263?fr=aladdin">高斯绝妙定理</a>，<a href="http://blog.sciencenet.cn/blog-677221-818928.html">相对论与黎曼几何-4-内蕴几何</a>)。</p>
+
+<hr />
+
+<h5 id="如何计算第一基本型">如何计算第一基本型？</h5>
+
+<p>在进行保角映射的时候，我们定义了参数空间下的梯度，利用它可以得到此映射下的雅可比矩阵</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/6808438-0146f2dc418c182f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="" /></p>
+
+<p>利用雅可比矩阵，可以得到第一基本型</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/6808438-828d029b7e21b5f7.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="" /></p>
+
+<p>并且，对于每一个三角形T来说，雅可比矩阵<strong>J</strong>和第一基本型<strong>I</strong>都是常量。</p>
+
+<hr />
+
+<h4 id="两个具体的方法">两个具体的方法</h4>
+
+<h5 id="mips">MIPS</h5>
+
+<p>下面介绍一种基于形变分析的方法 <strong>MIPS (most isometric parameterization of surfaces)</strong> 。这种方法的主要思想是减小变换过程中小椭圆的两个轴长σ1和σ2的比值</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/6808438-0e0d85e1800cd7e8.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="" /></p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/6808438-daf30188567bed91.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="" /></p>
+
+<p>对上式进行最小化相对来说比较复杂，可以将式子中的2范数改成Frobenius范数(<a href="https://en.wikipedia.org/wiki/Matrix_norm">矩阵范数</a>，<a href="http://mathworld.wolfram.com/FrobeniusNorm.html">Frobenius范式</a>)，然后将其化简可以得到</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/6808438-39651ed5fe447931.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="" /></p>
+
+<p>其中第一基本型的迹可以看作是狄利特雷能量(Dirichlet energy)，而雅可比矩阵行列式的值可以看作是3维空间和参数空间下三角形面积之比。</p>
+
+<h5 id="signal-specialized-parameterization">Signal-Specialized Parameterization</h5>
+
+<p>这个方法是基于纹理映射的，一般我们将纹理从参数空间映射到曲面上，而纹理变形的程度可以通过观察纹理上的某一个点在某一个方向上被拉伸的程度。</p>
+
+<p>对于某一个特定的三角形，一般使用下面的式子来表示其在所有方向上平均被拉伸的程度</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/6808438-d6deebf185f38c51.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="" /></p>
+
+<p>然后将网格上所有三角形按照面积加权组合一下，就可以得到</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/6808438-dc7146b0112ad87f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="" /></p></article>
+    <footer class="post-footer">
+      
+      <ul class="post-tags">
+        
+          <li><a href="https://BlauHimmel.github.io/tags/mesh"><span class="tag">Mesh</span></a></li>
+        
+          <li><a href="https://BlauHimmel.github.io/tags/%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0"><span class="tag">阅读笔记</span></a></li>
+        
+      </ul>
+      
+      <p class="post-copyright">
+        ©Copyright 2018
+      </p>
+    </footer>
+    
+      
+    
+  </section>
+  <footer class="site-footer">
+  <p>© 2017-2018 BlauHimmel&#39;s Blog</p>
+  <p>Powered by <a href="https://gohugo.io/" target="_blank">Hugo</a> with theme <a href="https://github.com/laozhu/hugo-nuo" target="_blank">Nuo</a>.</p>
+  
+</footer>
+
+
+
+<script async src="//cdn.bootcss.com/video.js/6.2.8/alt/video.novtt.min.js"></script>
+<script async src="//cdn.bootcss.com/mathjax/2.7.2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [['$','$'], ['\\(','\\)']],
+      displayMath: [['$$','$$'], ['\[','\]']],
+      processEscapes: true,
+      processEnvironments: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+      TeX: { equationNumbers: { autoNumber: "AMS" },
+      extensions: ["AMSmath.js", "AMSsymbols.js"] }
+    }
+  });
+</script>
+<script type="text/x-mathjax-config">
+  // Fix <code> tags after MathJax finishes running. This is a
+  // hack to overcome a shortcoming of Markdown. Discussion at
+  // https://github.com/mojombo/jekyll/issues/199
+  MathJax.Hub.Queue(() => {
+    MathJax.Hub.getAllJax().map(v => v.SourceElement().parentNode.className += ' has-jax');
+  });
+</script>
+
+<script src="https://BlauHimmel.github.io/js/bundle.js"></script>
+
+
+
+
+  </body>
+</html>

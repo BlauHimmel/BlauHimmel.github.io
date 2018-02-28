@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <meta charset="utf-8" />
+
+  
+  <title>Polygon Mesh Processing 阅读笔记(1) 曲面的表示</title>
+
+  
+  
+
+
+
+
+
+  
+  <meta name="author" content="BlauHimmel" />
+  <meta name="description" content="
+" />
+
+  
+  
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:site" content="@zhouyuming1104" />
+    <meta name="twitter:title" content="Polygon Mesh Processing 阅读笔记(1) 曲面的表示" />
+    <meta name="twitter:description" content="
+" />
+    <meta name="twitter:image" content="https://BlauHimmel.github.io/img/avatar.jpg" />
+  
+
+  
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="Polygon Mesh Processing 阅读笔记(1) 曲面的表示" />
+  <meta property="og:description" content="
+" />
+  <meta property="og:url" content="https://BlauHimmel.github.io/post/polygon-mesh-processing-%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B01-%E6%9B%B2%E9%9D%A2%E7%9A%84%E8%A1%A8%E7%A4%BA/" />
+  <meta property="og:image" content="https://BlauHimmel.github.io/img/avatar.jpg" />
+
+
+
+
+<meta name="generator" content="Hugo 0.37" />
+
+
+<link rel="canonical" href="https://BlauHimmel.github.io/post/polygon-mesh-processing-%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B01-%E6%9B%B2%E9%9D%A2%E7%9A%84%E8%A1%A8%E7%A4%BA/" />
+<link rel="alternative" href="https://BlauHimmel.github.io/index.xml" title="BlauHimmel&#39;s Blog" type="application/atom+xml" />
+
+
+<meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta name="format-detection" content="telephone=no,email=no,adress=no" />
+<meta http-equiv="Cache-Control" content="no-transform" />
+
+
+<meta name="robots" content="index,follow" />
+<meta name="referrer" content="origin-when-cross-origin" />
+
+
+
+
+
+
+
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="BlauHimmel&#39;s Blog" />
+<meta name="msapplication-tooltip" content="BlauHimmel&#39;s Blog" />
+<meta name='msapplication-navbutton-color' content="#5fbf5e" />
+<meta name="msapplication-TileColor" content="#5fbf5e" />
+<meta name="msapplication-TileImage" content="/img/tile-image-windows.png" />
+<link rel="icon" href="https://BlauHimmel.github.io/img/favicon.ico" />
+<link rel="icon" type="image/png" sizes="16x16" href="https://BlauHimmel.github.io/img/favicon-16x16.png" />
+<link rel="icon" type="image/png" sizes="32x32" href="https://BlauHimmel.github.io/img/favicon-32x32.png" />
+<link rel="icon" sizes="192x192" href="https://BlauHimmel.github.io/img/touch-icon-android.png" />
+<link rel="apple-touch-icon" href="https://BlauHimmel.github.io/img/touch-icon-apple.png" />
+<link rel="mask-icon" href="https://BlauHimmel.github.io/img/safari-pinned-tab.svg" color="#5fbf5e" />
+
+
+
+<link rel="stylesheet" href="//cdn.bootcss.com/video.js/6.2.8/alt/video-js-cdn.min.css" />
+
+<link rel="stylesheet" href="https://BlauHimmel.github.io/css/bundle.css" />
+
+
+  
+  <!--[if lt IE 9]>
+    <script src="//cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="//cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <script src="//cdn.bootcss.com/video.js/6.2.8/ie8/videojs-ie8.min.js"></script>
+  <![endif]-->
+
+<!--[if lte IE 11]>
+    <script src="//cdn.bootcss.com/classlist/1.1.20170427/classList.min.js"></script>
+  <![endif]-->
+
+
+<script src="//cdn.bootcss.com/object-fit-images/3.2.3/ofi.min.js"></script>
+
+
+<script src="//cdn.bootcss.com/smooth-scroll/12.1.4/js/smooth-scroll.polyfills.min.js"></script>
+
+
+</head>
+  <body>
+    
+    <div class="suspension">
+      <a title="Go to top" class="to-top is-hide"><span class="icon icon-up"></span></a>
+      
+        
+      
+    </div>
+    
+    
+  <header class="site-header">
+  <img class="avatar" src="https://BlauHimmel.github.io/img/avatar.png" alt="Avatar">
+  
+  <h2 class="title">BlauHimmel&#39;s Blog</h2>
+  
+  <p class="subtitle">A lazy programmer who is interested in game developing and computer graphic...</p>
+  <button class="menu-toggle" type="button">
+    <span class="icon icon-menu"></span>
+  </button>
+  <nav class="site-menu collapsed">
+    <h2 class="offscreen">Main Menu</h2>
+    <ul class="menu-list">
+      
+      
+      
+      
+        <li class="menu-item
+            
+            
+            
+              is-active
+            ">
+            <a href="https://BlauHimmel.github.io/">Home</a>
+          </li>
+      
+        <li class="menu-item
+            
+            
+            ">
+            <a href="https://BlauHimmel.github.io/tags/">Tags</a>
+          </li>
+      
+        <li class="menu-item
+            
+            
+            ">
+            <a href="https://BlauHimmel.github.io/about/">About</a>
+          </li>
+      
+    </ul>
+  </nav>
+  <nav class="social-menu collapsed">
+    <h2 class="offscreen">Social Networks</h2>
+    <ul class="social-list">
+
+      
+      <li class="social-item">
+        <a href="mailto:zhouyuming1104@qq.com" title="Email"><span class="icon icon-email"></span></a>
+      </li>
+
+      
+      <li class="social-item">
+        <a href="//github.com/BlauHimmel" title="GitHub"><span class="icon icon-github"></span></a>
+      </li>
+
+      <li class="social-item">
+        <a href="//twitter.com/zhouyuming1104" title="Twitter"><span class="icon icon-twitter"></span></a>
+      </li>
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <li class="social-item">
+        <a href="https://BlauHimmel.github.io/index.xml"><span class="icon icon-rss" title="RSS"></span></a>
+      </li>
+
+    </ul>
+  </nav>
+</header>
+
+  <section class="main post-detail">
+    <header class="post-header">
+      <h1 class="post-title">Polygon Mesh Processing 阅读笔记(1) 曲面的表示</h1>
+      <p class="post-meta">@BlauHimmel · Feb 28, 2018 · 1 min read</p>
+    </header>
+    <article class="post-content"><p></p>
+
+<p>大体上看，有两种表示一个曲面的方式：<strong>参数方程</strong> 、 <strong>隐式方程</strong> 。</p>
+
+<p>对于一个3D物体：</p>
+
+<ol>
+<li><p><strong>参数方程</strong> 是一个从 <strong>2维参数</strong> 到表示3D物体平面上点的空间坐标的 <strong>3维参数</strong> 的一个 <strong>映射</strong> 。</p></li>
+
+<li><p><strong>隐式方程</strong> 是一个等号左边为表示3D物体平面上点的空间坐标的 <strong>3维参数</strong> 构成的标量表达式，等号右边为0的方程。</p></li>
+</ol>
+
+<p>以平面上的单位圆为例，它的参数方程和隐式方程如下：</p>
+
+
+<figure>
+    
+        <img src="http://upload-images.jianshu.io/upload_images/6808438-41f76f59db839150.JPG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" />
+    
+    
+    <figcaption>
+        <h4>参数方程</h4>
+        
+    </figcaption>
+    
+</figure>
+
+
+
+<figure>
+    
+        <img src="http://upload-images.jianshu.io/upload_images/6808438-6f61bafc777a5227.JPG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" />
+    
+    
+    <figcaption>
+        <h4>隐式方程</h4>
+        
+    </figcaption>
+    
+</figure>
+
+
+<p>在实际中，一般根据实际需求采用不同的表示方法，这些需求一般分为如下3点：</p>
+
+<ol>
+<li><p><strong>Evaluation</strong>：在对曲面进行采样的时候需要对其附加上一下除了空间信息之外的信息。例如在进行渲染的时候，除了几何体的空间坐标外，还需要其法向量信息。</p></li>
+
+<li><p><strong>Query</strong>：一个典型的空间查询是判断空间中的某个点是否在几何体的内部，另外还比如空间中某个点到某个曲面的距离。</p></li>
+
+<li><p><strong>Modification</strong>：一个曲面可以在 <strong>几何</strong> 上被修改（将一个平面卷起来），还可以在 <strong>拓扑</strong> 关系上被修改（把几张纸合并成一张更大的纸或者挖掉一张纸的一部分）。</p></li>
+</ol>
+
+<h2 id="曲面的定义和属性">曲面的定义和属性</h2>
+
+<p>书中对于曲面的定义如下：</p>
+
+<blockquote>
+<p>an orientable continuous 2D manifold embedded in $ R^3 $</p>
+</blockquote>
+
+<p>个人的理解是：处于3维空间中的，方向连续的，不存在通过无限细小特征连接的的部分。</p>
+
+<p>以下面两种情况为例，无限细小特征指的两个正方体表面相连接的部分。</p>
+
+
+<figure>
+    
+        <img src="http://upload-images.jianshu.io/upload_images/6808438-6568eccb4a55b45c.JPG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" />
+    
+    
+    <figcaption>
+        <h4>通过点相连接</h4>
+        
+    </figcaption>
+    
+</figure>
+
+
+
+<figure>
+    
+        <img src="http://upload-images.jianshu.io/upload_images/6808438-b712402774ee43c4.JPG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" />
+    
+    
+    <figcaption>
+        <h4>通过面相连接</h4>
+        
+    </figcaption>
+    
+</figure>
+
+
+<p>这样两个正方体组成的组合体的外表面就不能称为一个面。</p>
+
+<p>这样的组合体可以称之为：<em>degenerate 3D solid</em></p>
+
+<p>而把上面的两个组合体连接的部分变成下面这个样子之后，就不存在所谓的“通过无限细小特征相连接”的情况了。</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/6808438-f67bcada8986fc73.JPG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="" /></p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/6808438-84be24ffb1f6c23c.JPG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="" /></p>
+
+<p>这样组合体可以称之为：<em>non-degenerate 3D solid</em></p>
+
+<h2 id="点边面的关系">点边面的关系</h2>
+
+<p>在一个闭合连接网格内点(Vertex)，边(Edge)和面(Face)的数量存在下面的关系：</p>
+
+<blockquote>
+<p>Vertex - Edge + Face = 2(1 - <em>g</em> )</p>
+</blockquote>
+
+<p>上面的式子中*g*表示的是曲面的亏格(<em>genus</em>)，它的标准解释为：</p>
+
+<blockquote>
+<p>若曲面中最多可画出n条闭合曲线同时不将曲面分开，则称该曲面亏格为n</p>
+</blockquote>
+
+<p>而对于一般的<strong>闭合曲面</strong>来说亏格n就是几何体上洞眼的数目</p>
+
+
+<figure>
+    
+        <img src="http://upload-images.jianshu.io/upload_images/6808438-8324322c1a448d54.JPG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" />
+    
+    
+    <figcaption>
+        <h4>n = 0(左) n = 1(中) n = 2(右</h4>
+        
+    </figcaption>
+    
+</figure>
+
+
+<p>对于一个三角形网格，基于上面的式子还能得到下面的关系：</p>
+
+<blockquote>
+<ol>
+<li>三角形的数量大约是顶点数量的2倍 -&gt; Face ≈ 2 * Vertex</li>
+<li>边的数量大约是顶点数量的3倍 -&gt; Edge ≈ 3 * Vertex</li>
+<li>顶点邻边的数量平均是6</li>
+</ol>
+</blockquote></article>
+    <footer class="post-footer">
+      
+      <ul class="post-tags">
+        
+          <li><a href="https://BlauHimmel.github.io/tags/mesh"><span class="tag">Mesh</span></a></li>
+        
+          <li><a href="https://BlauHimmel.github.io/tags/%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0"><span class="tag">阅读笔记</span></a></li>
+        
+      </ul>
+      
+      <p class="post-copyright">
+        ©Copyright 2018
+      </p>
+    </footer>
+    
+      
+    
+  </section>
+  <footer class="site-footer">
+  <p>© 2017-2018 BlauHimmel&#39;s Blog</p>
+  <p>Powered by <a href="https://gohugo.io/" target="_blank">Hugo</a> with theme <a href="https://github.com/laozhu/hugo-nuo" target="_blank">Nuo</a>.</p>
+  
+</footer>
+
+
+
+<script async src="//cdn.bootcss.com/video.js/6.2.8/alt/video.novtt.min.js"></script>
+<script async src="//cdn.bootcss.com/mathjax/2.7.2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [['$','$'], ['\\(','\\)']],
+      displayMath: [['$$','$$'], ['\[','\]']],
+      processEscapes: true,
+      processEnvironments: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+      TeX: { equationNumbers: { autoNumber: "AMS" },
+      extensions: ["AMSmath.js", "AMSsymbols.js"] }
+    }
+  });
+</script>
+<script type="text/x-mathjax-config">
+  // Fix <code> tags after MathJax finishes running. This is a
+  // hack to overcome a shortcoming of Markdown. Discussion at
+  // https://github.com/mojombo/jekyll/issues/199
+  MathJax.Hub.Queue(() => {
+    MathJax.Hub.getAllJax().map(v => v.SourceElement().parentNode.className += ' has-jax');
+  });
+</script>
+
+<script src="https://BlauHimmel.github.io/js/bundle.js"></script>
+
+
+
+
+  </body>
+</html>

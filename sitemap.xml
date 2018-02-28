@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  
+  <url>
+    <loc>https://BlauHimmel.github.io/about/</loc>
+    <lastmod>2018-02-28T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://BlauHimmel.github.io/post/hello-world/</loc>
+    <lastmod>2018-02-28T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://BlauHimmel.github.io/post/polygon-mesh-processing-%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B01-%E6%9B%B2%E9%9D%A2%E7%9A%84%E8%A1%A8%E7%A4%BA/</loc>
+    <lastmod>2018-02-28T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://BlauHimmel.github.io/post/polygon-mesh-processing-%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B02-%E7%BD%91%E6%A0%BC%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/</loc>
+    <lastmod>2018-02-28T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://BlauHimmel.github.io/post/polygon-mesh-processing-%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B03-%E5%BE%AE%E5%88%86%E5%87%A0%E4%BD%95/</loc>
+    <lastmod>2018-02-28T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://BlauHimmel.github.io/post/polygon-mesh-processing-%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B04-%E6%9B%B2%E9%9D%A2%E7%9A%84%E5%B9%B3%E6%BB%91smoothing/</loc>
+    <lastmod>2018-02-28T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://BlauHimmel.github.io/post/polygon-mesh-processing-%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B05-%E5%8F%82%E6%95%B0%E5%8C%96parameterization/</loc>
+    <lastmod>2018-02-28T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://BlauHimmel.github.io/post/polygon-mesh-processing-%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B06-%E7%BD%91%E6%A0%BC%E9%87%8D%E5%88%92%E5%88%86remeshing/</loc>
+    <lastmod>2018-02-28T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://BlauHimmel.github.io/post/polygon-mesh-processing-%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B07-%E7%BD%91%E6%A0%BC%E7%9A%84%E7%AE%80%E5%8C%96%E4%B8%8E%E9%80%BC%E8%BF%91simplification-and-approximation/</loc>
+    <lastmod>2018-02-28T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://BlauHimmel.github.io/post/polygon-mesh-processing-%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B08-%E6%A8%A1%E5%9E%8B%E4%BF%AE%E5%A4%8Drepair/</loc>
+    <lastmod>2018-02-28T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://BlauHimmel.github.io/post/polygon-mesh-processing-%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B09-%E5%8F%98%E5%BD%A2deformation/</loc>
+    <lastmod>2018-02-28T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://BlauHimmel.github.io/</loc>
+    <lastmod>2018-02-28T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://BlauHimmel.github.io/categories/</loc>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://BlauHimmel.github.io/tags/mesh/</loc>
+    <lastmod>2018-02-28T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://BlauHimmel.github.io/post/</loc>
+    <lastmod>2018-02-28T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://BlauHimmel.github.io/tags/</loc>
+    <lastmod>2018-02-28T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://BlauHimmel.github.io/tags/%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/</loc>
+    <lastmod>2018-02-28T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+</urlset>

@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <meta charset="utf-8" />
+
+  
+  <title>Polygon Mesh Processing 阅读笔记(3) 微分几何</title>
+
+  
+  
+
+
+
+
+
+  
+  <meta name="author" content="BlauHimmel" />
+  <meta name="description" content="
+" />
+
+  
+  
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:site" content="@zhouyuming1104" />
+    <meta name="twitter:title" content="Polygon Mesh Processing 阅读笔记(3) 微分几何" />
+    <meta name="twitter:description" content="
+" />
+    <meta name="twitter:image" content="https://BlauHimmel.github.io/img/avatar.jpg" />
+  
+
+  
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="Polygon Mesh Processing 阅读笔记(3) 微分几何" />
+  <meta property="og:description" content="
+" />
+  <meta property="og:url" content="https://BlauHimmel.github.io/post/polygon-mesh-processing-%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B03-%E5%BE%AE%E5%88%86%E5%87%A0%E4%BD%95/" />
+  <meta property="og:image" content="https://BlauHimmel.github.io/img/avatar.jpg" />
+
+
+
+
+<meta name="generator" content="Hugo 0.37" />
+
+
+<link rel="canonical" href="https://BlauHimmel.github.io/post/polygon-mesh-processing-%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B03-%E5%BE%AE%E5%88%86%E5%87%A0%E4%BD%95/" />
+<link rel="alternative" href="https://BlauHimmel.github.io/index.xml" title="BlauHimmel&#39;s Blog" type="application/atom+xml" />
+
+
+<meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta name="format-detection" content="telephone=no,email=no,adress=no" />
+<meta http-equiv="Cache-Control" content="no-transform" />
+
+
+<meta name="robots" content="index,follow" />
+<meta name="referrer" content="origin-when-cross-origin" />
+
+
+
+
+
+
+
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="BlauHimmel&#39;s Blog" />
+<meta name="msapplication-tooltip" content="BlauHimmel&#39;s Blog" />
+<meta name='msapplication-navbutton-color' content="#5fbf5e" />
+<meta name="msapplication-TileColor" content="#5fbf5e" />
+<meta name="msapplication-TileImage" content="/img/tile-image-windows.png" />
+<link rel="icon" href="https://BlauHimmel.github.io/img/favicon.ico" />
+<link rel="icon" type="image/png" sizes="16x16" href="https://BlauHimmel.github.io/img/favicon-16x16.png" />
+<link rel="icon" type="image/png" sizes="32x32" href="https://BlauHimmel.github.io/img/favicon-32x32.png" />
+<link rel="icon" sizes="192x192" href="https://BlauHimmel.github.io/img/touch-icon-android.png" />
+<link rel="apple-touch-icon" href="https://BlauHimmel.github.io/img/touch-icon-apple.png" />
+<link rel="mask-icon" href="https://BlauHimmel.github.io/img/safari-pinned-tab.svg" color="#5fbf5e" />
+
+
+
+<link rel="stylesheet" href="//cdn.bootcss.com/video.js/6.2.8/alt/video-js-cdn.min.css" />
+
+<link rel="stylesheet" href="https://BlauHimmel.github.io/css/bundle.css" />
+
+
+  
+  <!--[if lt IE 9]>
+    <script src="//cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="//cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <script src="//cdn.bootcss.com/video.js/6.2.8/ie8/videojs-ie8.min.js"></script>
+  <![endif]-->
+
+<!--[if lte IE 11]>
+    <script src="//cdn.bootcss.com/classlist/1.1.20170427/classList.min.js"></script>
+  <![endif]-->
+
+
+<script src="//cdn.bootcss.com/object-fit-images/3.2.3/ofi.min.js"></script>
+
+
+<script src="//cdn.bootcss.com/smooth-scroll/12.1.4/js/smooth-scroll.polyfills.min.js"></script>
+
+
+</head>
+  <body>
+    
+    <div class="suspension">
+      <a title="Go to top" class="to-top is-hide"><span class="icon icon-up"></span></a>
+      
+        
+      
+    </div>
+    
+    
+  <header class="site-header">
+  <img class="avatar" src="https://BlauHimmel.github.io/img/avatar.png" alt="Avatar">
+  
+  <h2 class="title">BlauHimmel&#39;s Blog</h2>
+  
+  <p class="subtitle">A lazy programmer who is interested in game developing and computer graphic...</p>
+  <button class="menu-toggle" type="button">
+    <span class="icon icon-menu"></span>
+  </button>
+  <nav class="site-menu collapsed">
+    <h2 class="offscreen">Main Menu</h2>
+    <ul class="menu-list">
+      
+      
+      
+      
+        <li class="menu-item
+            
+            
+            
+              is-active
+            ">
+            <a href="https://BlauHimmel.github.io/">Home</a>
+          </li>
+      
+        <li class="menu-item
+            
+            
+            ">
+            <a href="https://BlauHimmel.github.io/tags/">Tags</a>
+          </li>
+      
+        <li class="menu-item
+            
+            
+            ">
+            <a href="https://BlauHimmel.github.io/about/">About</a>
+          </li>
+      
+    </ul>
+  </nav>
+  <nav class="social-menu collapsed">
+    <h2 class="offscreen">Social Networks</h2>
+    <ul class="social-list">
+
+      
+      <li class="social-item">
+        <a href="mailto:zhouyuming1104@qq.com" title="Email"><span class="icon icon-email"></span></a>
+      </li>
+
+      
+      <li class="social-item">
+        <a href="//github.com/BlauHimmel" title="GitHub"><span class="icon icon-github"></span></a>
+      </li>
+
+      <li class="social-item">
+        <a href="//twitter.com/zhouyuming1104" title="Twitter"><span class="icon icon-twitter"></span></a>
+      </li>
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <li class="social-item">
+        <a href="https://BlauHimmel.github.io/index.xml"><span class="icon icon-rss" title="RSS"></span></a>
+      </li>
+
+    </ul>
+  </nav>
+</header>
+
+  <section class="main post-detail">
+    <header class="post-header">
+      <h1 class="post-title">Polygon Mesh Processing 阅读笔记(3) 微分几何</h1>
+      <p class="post-meta">@BlauHimmel · Feb 28, 2018 · 3 min read</p>
+    </header>
+    <article class="post-content"><p></p>
+
+<h2 id="曲线">曲线</h2>
+
+<p>曲线是二维空间上可微分的一维流形。曲线可以用参数方程表示为如下形式：</p>
+
+<p>$$ \mathbf{p}(u) =
+\begin{pmatrix}
+x(u)\\<br />
+y(u)\\<br />
+\end{pmatrix},
+u \in[a, b] \subset R $$</p>
+
+<p>其中$x$和$y$分别是关于$u$的可微函数，那么曲线在某一点的切向量则为各分量的一阶导数组成的向量，即：</p>
+
+<p>$$ \mathbf{p&rsquo;}(u) =
+\begin{pmatrix}
+x&rsquo;(u)\\<br />
+y&rsquo;(u)\\<br />
+\end{pmatrix},
+u \in[a, b] \subset R $$</p>
+
+<p>借由上式，如果$p&rsquo;(u) $在$ u $处不为0，则把这一点成为曲线的 <strong>正则点</strong> 。曲线上的点处处正则的曲线称为 <strong>正则曲线</strong> (Regular Curve)。</p>
+
+<p>下式可以求曲线在某一点的法向量的值：</p>
+
+<p>$$
+\mathbf{n}(u) = \frac{\mathbf{p&rsquo;}(u)^{\perp}}{\Vert \mathbf{p&rsquo;}(u)^{\perp} \Vert}
+$$</p>
+
+<p>同样的曲线是可以通过参数变换使用不同的参数来表示的。曲线的微分几何关注诸如 <strong>弧长</strong> 、<strong>曲率</strong> 之类的，独立于特定参数之外的属性，也就是说无论参数如何变换，这些属性的值都是相等的。</p>
+
+<h4 id="弧长">弧长</h4>
+
+<p>对于上述曲线，起始点$a$到曲线上任意点$u$之间的弧长可以表示为：</p>
+
+<p>$$
+s(u) = \int_{a}^{u} \Vert \mathbf{p&rsquo;}(s) \Vert du, u \in [a, b]
+$$</p>
+
+<p>即弧长是切向量长度对曲线参数的积分。可以发现，<strong>弧长</strong> 独立与特定参数，并且将参数$u$从区间$[a, b]$映射到了区间$[0, L]$，其中$L$是曲线的弧长。</p>
+
+<p>可以发现这是一个变上限积分函数，对两侧同时求导得到：</p>
+
+<p>$$
+\frac{ds}{du} = \Vert \mathbf{p&rsquo;}(u) \Vert
+$$</p>
+
+<p>当切向量的模为1，即曲线的切向量为单位向量场的时候，参数u就是曲线的弧长参数了</p>
+
+<h4 id="曲率">曲率</h4>
+
+<p>曲线的 <strong>曲率</strong> (curvature)就是针对曲线上某个点的切线方向角对弧长的转动率，即单位弧长内曲线转过的角度。</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/6808438-01fcd18e6153cb0f.JPG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="" /></p>
+
+<p>假设正则曲线的参数方程的参数为其弧长，图像如上图所示，$\alpha$表示是曲线上的切向量（即$p(s)$的导数$p&rsquo;(s)$），根据定义曲线的曲率为：</p>
+
+<p>$$
+\kappa(s) = \Vert \alpha&rsquo;(s) \Vert = \lim\limits_{\Delta s \to 0}|{\frac{\Delta \theta}{\Delta s}|}
+$$</p>
+
+<p>其中$\theta$表示的是$\alpha(s)$和$\alpha(s+\Delta s)$两个向量的夹角，要证明这个式子只需要按照导数定义展开即可：</p>
+
+<p>$$
+\kappa(s) = \lim\limits_{\Delta s \to 0} {\frac{|\alpha(s+\Delta s) - \alpha(s)|}{| \Delta s |}}
+$$</p>
+
+<p>$$
+\kappa(s) = \lim\limits_{\Delta s \to 0} {\frac{2|\ sin(\frac{\Delta \theta}{2}) |}{| \Delta s |}}
+$$</p>
+
+<p>$$
+\kappa(s) = \lim\limits_{\Delta s \to 0} {| \frac{\Delta \theta}{\Delta s} |}
+$$</p>
+
+<p>对于曲率还有另外一个很重要且相关的属性，即 <strong>曲率半径</strong> ，即把那一段曲线尽可能地微分，直到最后近似为一个圆弧，此圆弧所对应的半径即为曲线上该点的曲率半径。这个圆弧所对应的圆一般称作：Osculating Circle(密切圆)。</p>
+
+<p>我们知道弧长与半径的比值是弧度。对于这一段圆弧 <strong>曲率</strong> 的值为弧度于弧长的比值，而半径的值为弧长于弧度的比值。</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/6808438-25e3b02fe1b946fe.JPG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="" /></p>
+
+<p>对于 <strong>曲率</strong> 和 <strong>曲率半径</strong> ，可以得到下面的关系：</p>
+
+<p>$$
+\kappa = \frac{1}{R}
+$$</p>
+
+<h2 id="曲面">曲面</h2>
+
+<h4 id="曲面的参数化表示">曲面的参数化表示</h4>
+
+<p>以地球地图的展开为例，地球表面是一个闭合的曲面，为了印刷地图，一般需要将其表面进行展开。</p>
+
+<p>展开之前，首先沿着子午线将其“切开”，然后按下面这个样子进行展开：</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/6808438-59a3f914125ce047.JPG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="" /></p>
+
+<p>可以发现，北极点被变换为了线段$AC$，而南极点被变换了线段$BD$</p>
+
+<p>这样的一个球面，假设半径为$R$，有两种坐标表示的方法，分别是：$(x, y, z)$和$(\theta, \phi)$</p>
+
+<p>前一种非常好理解，即球面某一点在3维笛卡尔坐标系下的坐标，那么球面的可以用下列隐式方程表示：</p>
+
+<p>$$
+  x^2+y^2+z^2=R^2
+$$</p>
+
+<p>通过该方程能够很快速地判断空间中某个点与球面地位置关系。</p>
+
+<p>后一种坐标中有两个参数$\theta$和$\phi$，其意义可以通过下面这张图来理解(和球坐标非常类似)</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/6808438-b446cad90979be1b.JPG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="" /></p>
+
+<p>理解后就不难得出两种坐标的转换方法：</p>
+
+<p>$$
+\mathbf{x}(\theta, \phi) =
+\begin{pmatrix}
+x(\theta, \phi)\\<br />
+y(\theta, \phi)\\<br />
+z(\theta, \phi)\\<br />
+\end{pmatrix} =
+\begin{pmatrix}
+R\ cos(\theta) cos(\phi))\\<br />
+R\ sin(\theta) cos(\phi))\\<br />
+R\ sin(\phi))\\<br />
+\end{pmatrix}
+$$</p>
+
+<p>其中$\theta$的取值范围为$[0, 2\pi]$，$\phi$的取值范围为$[-0.5\pi, 0.5\pi]$，可以发现通过这张表示方法将“方形”区域映射到了一个球面上。</p>
+
+<p>通过$\theta$和$\phi$这两个参数，可以画出两组类似经纬度的平行线，通过这些平行线，可以清楚的观察出球面不同部分被扭曲的程度。</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/6808438-3253e8319401e63d.JPG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="" /></p>
+
+<h4 id="度量性质-metric-property">度量性质(Metric Property)</h4>
+
+<p>假设一个三维曲面的参数方程如下</p>
+
+<p>$$
+\mathbf{x}(\theta, \phi) =
+\begin{pmatrix}
+x(u, v)\\<br />
+y(u, v)\\<br />
+z(u, v)\\<br />
+\end{pmatrix}, (u,v) \in \Omega \subset R^2
+$$</p>
+
+<p>其中$x$,$y$,$z$是关于参数$u$,$v$的可微函数，$\Omega$是参数$u$,$v$的定义域。</p>
+
+<p>同曲线类似，曲面的度量是由它的一阶导数决定。$\mathbf{x}$关于参数$u$, $v$的偏导数如下</p>
+
+<p>$$
+\mathbf{x}_u(u_0, v_0) := \frac{\partial{\mathbf{x}}}{\partial{u}}(u_0, v_0)
+$$</p>
+
+<p>$$
+\mathbf{x}_v(u_0, v_0) := \frac{\partial{\mathbf{x}}}{\partial{v}}(u_0, v_0)
+$$</p>
+
+<p>这两个偏导数表示的是如下两条曲线上的切向量</p>
+
+<p>$$
+\mathbf{C}_u(t)=\mathbf{u_0+t, v_0}
+$$</p>
+
+<p>$$
+\mathbf{C}_v(t)=\mathbf{u_0, v_0+t}
+$$</p>
+
+<p>很明显这两个方程分别是当曲面方程的某个参数固定后，以另一个参数为参数的方程。</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/6808438-a071652b811fa5f5.JPG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="" /></p>
+
+<p>通过上面这张图，能够很清晰的看出$\mathbf{C}_v$, $\mathbf{C}_u$, $\mathbf{x}_v$, $\mathbf{x}_u$的具体含义。</p>
+
+<p>如果想要表示表示在平面某一点的法向量也很简单，曲线方程在某一点关于参数 <em>u</em> ， <em>v</em> 的偏导数确定了两条切向量$\mathbf{x}_v$, $\mathbf{x}_u$，将这两个向量做叉积即可得到曲面在这一点的法向量</p>
+
+<p>$$
+\mathbf{n} = \frac{\mathbf{x}_u \times \mathbf{x}_v}{\Vert \mathbf{x}_u \times \mathbf{x}_v \Vert}
+$$</p>
+
+<p>上面的导数方向只有沿两个参数的方向，如果要求曲面关于某一点在任意方向的导数，可以引入 <strong>方向导数</strong> 的概念。</p>
+
+<p>在求解方向导数的时候需要给定一个方向向量，由于曲面方程以参数方程的形式给出，先定义一个在曲线方程参数空间$u$, $v$下的方向向量</p>
+
+<p>$$
+\mathbf{\bar{w}}=(u_w, v_w)
+$$</p>
+
+<p>那么曲面通过这一点，在参数空间上沿上述方向前进的曲线方程可以表示为</p>
+
+<p>$$
+\mathbf{C}_\mathbf{w}(t)=\mathbf{x}(u_0+t u_w, v_0+t v_w)
+$$</p>
+
+<p>这时曲面在点$(u_0, v_0)$处，$\mathbf{w}$方向的方向导数为：</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/6808438-d27f880168121fce.JPG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="" /></p>
+
+<p>向量$\mathbf{w}$是定义在三维空间下的，而已知的方向向量是在二维参数空间上的，现在要将其从参数空间变换为曲面上的切向量：</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/6808438-105e814e65fbe0ab.JPG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="" /></p>
+
+<p>只需要应用到雅可比矩阵即可完成这个变换：</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/6808438-85b1b06099e25294.JPG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="" /></p>
+
+<p>此时雅可比矩阵的值为：</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/6808438-b1c644496c68d47c.JPG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="" /></p>
+
+<h4 id="曲面的第一基本型">曲面的第一基本型</h4>
+
+<p>通过上面求解方向导数的过程可以发现，雅可比矩阵代表了一种从参数的定义域空间到曲面坐标空间的变换。通过雅可比矩阵可以知道一些量，诸如角度、距离和面积等，在这两个空间之间的映射关系。</p>
+
+<p>假设又两个单位向量$\mathbf{w}_1$, $\mathbf{w}_2$，这两个向量之间夹角的余弦值等于两向量的内积。</p>
+
+<p>向量在曲面空间和参数空间下的表示形式不同，单数可以明确的一点是，无论如何表示，向量之间的夹角是不会变的。</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/6808438-68135522121ffda9.JPG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="" /></p>
+
+<p>在上面的等式中，$\mathbf{J}$乘以$\mathbf{J}_T$这一部分就被称为 <strong>曲面的第一基本型</strong></p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/6808438-f6ff4617f67ebf06.JPG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="" /></p>
+
+<p>借由$\mathbf{Ⅰ}$，要通过参数来表示下面曲线的弧长：</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/6808438-1a35bf766c5dde6f.JPG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="" /></p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/6808438-1433579c305a58b5.JPG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="" /></p>
+
+<p>首先观察曲面的弧长公式：</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/6808438-2007b0fcd031ae23.JPG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="" /></p>
+
+<p>接下来，用参数$t$来表示切向量$\mathbf{w}(u_t, v_t)$，则其模长为：</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/6808438-c2c05df7e19cb9ba.JPG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="" /></p>
+
+<p>最后带入计算可以得到弧长公式：</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/6808438-a436b723be84c2ba.JPG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="" /></p>
+
+<p>同理，可以用下面的方法求得曲面的面积：</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/6808438-f8a8cdd4a7fdc5b7.JPG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="" /></p>
+
+<h4 id="曲面的曲率">曲面的曲率</h4>
+
+<p>曲面的曲率的定义是由曲线的曲率的定义扩充而来的，对于曲面上的一点，存在无数个切向量。对于曲面上的一点$\mathbf{p}$，以及一条切向量$\mathbf{t}$，这时可以定义曲率为：切向量$\mathbf{t}$和曲面在这一点的法向量所成平面与曲面相交形成的直线在点$\mathbf{p}$处的曲率。</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/6808438-ba37cefc7abfc7a9.JPG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="" /></p>
+
+<p>将这个曲率写成式子为：</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/6808438-baa96e73cb164c47.JPG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="" /></p>
+
+<p>其中$\mathbf{Ⅱ}$为第二基本型</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/6808438-f52ddb74259bb0fd.JPG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="" /></p>
+
+<p>上面关于曲面曲率的函数在切线方向变化的时候会有两个极值(极大值和极小值)，一般称它们为 <strong>主曲率(principal curvatures)</strong> ，如果两极值不相等，就把取这两个极值时的两个切向量称为 <strong>主方向(principal directions)</strong> 。如果两极值相等，则曲面上这一点称为 <strong>脐点(umbilical)</strong> ，曲面上这一点的所有切向量都可以称为 <strong>主方向(principal directions)</strong> ，并且曲面这一点各方向的曲率相等。特殊地，当且仅当曲面为球面或平面时，其上所有的点都是 <strong>脐点(umbilical)</strong> 。</p>
+
+<hr />
+
+<p>对于曲面的两个 <strong>主曲率</strong> 和其在同一点任意方向的曲率，有如下的关系：</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/6808438-4734e04edf54b025.JPG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="" /></p>
+
+<p>其中$\phi$为 <strong>主方向</strong> $\mathbf{t}_1$和指定方向$\mathbf{t}$的夹角。可以看出，曲面的曲率仅仅由其两个 <strong>主曲率</strong> 决定，这一点任意方向的法曲率都是这两个 <strong>主曲率</strong> 的凸组合(convex combination)，另外还能得出的一点是 <strong>主方向</strong> 永远是相互正交的。</p>
+
+<hr />
+
+<p>曲面的某个区域内的性质同样可以用 <strong>曲率张量</strong> 来表示，<strong>曲率张量</strong> $\mathbf{C}$可以用下面的方法得到：</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/6808438-c85d69dbbeac1fa7.JPG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="" /></p>
+
+<p>其中D是对角线元素为$\kappa_1$, $\kappa_2$, $0$的三阶方阵，P也为三阶方阵，由$\mathbf{t_1}$, $\mathbf{t_2}$ , $\mathbf{n}_1$三个列向量组成。</p>
+
+<hr />
+
+<p>另外，还有两种广泛使用的描述曲率的方式：</p>
+
+<ul>
+<li><strong>平均曲率</strong></li>
+</ul>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/6808438-e16ee4ec2bf7d9f5.JPG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="" /></p>
+
+<ul>
+<li><strong>高斯曲率</strong></li>
+</ul>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/6808438-d5ccd6b790c620cd.JPG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="" /></p>
+
+<p>高斯曲率可以将曲面上的点分为3类：</p>
+
+<ul>
+<li><p><strong>椭圆点(elliptical point)</strong>  $K &gt; 0$：椭圆点在其附近的区域上通常是凸出的</p></li>
+
+<li><p><strong>双曲线点(hyperbolic point)</strong> $K &lt; 0$：双曲点在其附近的区域上通常是马鞍形</p></li>
+
+<li><p><strong>抛物线点(parabolic point)</strong> $K = 0$：抛物线点通常在椭圆曲线和双曲线区域的分界线处</p></li>
+</ul>
+
+<p>高斯曲率和平均曲率通常用在曲面的可视化分析上</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/6808438-85f8d6876ea423e4.JPG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="左图为平均曲率，右图为高斯曲率" /></p>
+
+<h4 id="内蕴几何学-intrinsic-geometry">内蕴几何学(Intrinsic geometry)</h4>
+
+<p>在微分几何中，那些只依赖于 <strong>第一基本型</strong> 的属性被称为是 <strong>内蕴的(Intrinsic)</strong>。直观上来说它们可以仅仅通过曲面二维特征来导出。例如曲面上曲线的长度，角度等都是 <strong>内蕴的(Intrinsic)</strong>。</p>
+
+<p>对于 <strong>高斯曲率</strong> 和 <strong>平均曲率</strong> ，前者在等距变换下是不变的，所以它是 <strong>内蕴的(Intrinsic)</strong> ，即 <strong>高斯曲率</strong> 是可以由 <strong>第一基本型</strong> 直接决定的；而后者则不是，它依赖于曲面。</p>
+
+<p><strong>内蕴的(Intrinsic)</strong> 通常被用来取表示参数的独立性。</p>
+
+<h4 id="拉普拉斯算子">拉普拉斯算子</h4>
+
+<p>一般称某函数梯度的散度为 <strong>拉普拉斯算子</strong>，对于二元函数$f(u,v)$，其在欧式空间上的二阶差分算子(拉普拉斯算子)可以写为：</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/6808438-8dde869145dc78c3.JPG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="" /></p>
+
+<p>拉普拉斯算子还可以推广到二阶流形曲面$S$上，其推广形式称为 <strong>拉普拉斯-贝尔特拉米算子</strong> ，定义为：</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/6808438-8b4c2a7bf89bcf5b.JPG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="" /></p>
+
+<p>对于曲面上某一个具体的点$\mathbf{x}$，其 <strong>拉普拉斯-贝尔特拉米算子</strong> 和其 <strong>平均曲率</strong> 存在下面的关系：</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/6808438-a99b55cd91c8035c.JPG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="" /></p>
+
+<p>虽然这个式子说明 <strong>平均曲率</strong> （非内蕴的）和 <strong>拉普拉斯-贝尔特拉米算子</strong> 之间存在某种关系，但是 <strong>拉普拉斯-贝尔特拉米算子</strong> 本身仅取决于 <strong>第一基本型</strong>，是内蕴的。</p>
+
+<h2 id="离散微分算子">离散微分算子</h2>
+
+<p>由于3D网格并不是连续的，而上面的讨论是建立在曲面是光滑的基础之上的。要将上述算子运用到3D网格上，需要将网格看作一个很粗糙的曲面，然后通过网格数据去计算这个近似曲面的微分属性。</p>
+
+<h4 id="局部平均区域">局部平均区域</h4>
+
+<p>一般的想法就是计算网格某个点以及与其相邻点的微分属性的平均值。</p>
+
+<p>当网格某个点以及与其相邻点组成这个区域的面积较大的时候，通过计算平均值得到的微分属性会很稳定；而面积较小的时候，精细的变化则会被更好的保留。</p>
+
+<p>常用的由下面三种定义这个面积的方法，其区别主要是在顶点周围的三角形中取点的方式不同：</p>
+
+
+<figure>
+    
+        <img src="http://upload-images.jianshu.io/upload_images/6808438-003bf27aacfd39c8.JPG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" />
+    
+    
+    <figcaption>
+        <h4>重心（左图），外心（中图），混合点（右图）</h4>
+        
+    </figcaption>
+    
+</figure>
+
+
+<p>其中右图中，当三角形为钝角三角形时则取中心点对边的中点，否则取三角形的外心。</p>
+
+<h4 id="法向量">法向量</h4>
+
+<p>在3D网格中，要计算某个三角面的法向量是比较容易的，只需要取两条边向量坐叉乘即可：</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/6808438-8affd18d57953710.JPG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="" /></p>
+
+<p>如果要计算某个顶点的法向量，同样考虑对顶点周围相邻的三角形的法向量做加权平均：</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/6808438-aaca3623815b9c48.JPG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="" /></p>
+
+<p>权值αT的取法，一般常用的有下面几种：</p>
+
+<ul>
+<li><p>$\alpha_T$取常数1，这样计算的时候就忽略了邻边的长度，三角形的面积，角度。对于不规则的网格，计算的结果一般都是违反直觉的。</p></li>
+
+<li><p>$\alpha_T$取三角形的面积，这样取的好处是便于计算（只需要进行叉乘运算就可以了，还不用对向量进行单位化），不过这种方法得到的结果有的时候也会出现违反直觉的情况。</p></li>
+
+<li><p>$\alpha_T$取邻边的夹角，不过由于计算过程涉及到了三角函数，效率上相对要低一些，不过效果比前两者好。</p></li>
+</ul>
+
+<h4 id="梯度">梯度</h4>
+
+<p>同样是基于加权平均的方法，求解网格中某个三角形上某一点的坐标可以由三个顶点的梯度根据重心坐标的三个权值做加权平均。</p>
+
+<p>对于分段线性函数$f$来说，其在三角形顶点上有对应的值。可以考虑用拉格朗日插值法来表示三角上任意一点的函数值（$\mathbf{u}$是二维参数）：</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/6808438-c9b09410acda57b3.JPG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="" /></p>
+
+<p>由于拉格朗日插值公式的基函数$B$具有下面的性质</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/6808438-b0ae2c810fc17094.JPG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="" /></p>
+
+<p>两边同时做梯度运算可以得到</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/6808438-10fe2b5fa1f29854.JPG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="" /></p>
+
+<p>消去$B_i$后原来的式子为</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/6808438-749e1239afe79716.JPG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="" /></p>
+
+<p>顶点i处基函数的梯度为从顶点$i$处沿着对边上高的方向的向量，且向量的模长为高的倒数，化简后(向量旋转90度后除以底边的长得到单位向量，再除以高度的结果，其中底边长乘以高度整好为面积的两倍)为：</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/6808438-e03dbfeadae1d8ee.JPG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="" /></p>
+
+<p>代入后可以得到三角形上分段线性函数的梯度为</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/6808438-5fc277fb88fc440b.JPG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="" /></p>
+
+<h4 id="离散形式的拉普拉斯算子">离散形式的拉普拉斯算子</h4>
+
+<ul>
+<li>Uniform形式的拉普拉斯算子</li>
+</ul>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/6808438-315e4570d98ceecd.JPG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="" /></p>
+
+<p>这一种形式直观上来说就是以中心点$i$为起点，相邻顶点平均值为终点的向量。</p>
+
+<p>由于平面的平均曲率$H$为$0$，这时算子的结果应该是$0$，不过上式的结果并不一定是非0的，所以这种方法不太适合用在非等距网格上。</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/6808438-a99b55cd91c8035c.JPG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="" /></p>
+
+<p>这种方法只考虑了网格的连接性，所以使用范围有限。</p>
+
+<ul>
+<li>余切形式的拉普拉斯算子</li>
+</ul>
+
+<p>这种形式更加的精准，直接计算顶点$v_i$周围的平均区域（之前提到过，有若干种取法），然后对其梯度的散度进行曲面积分，然后使用 <em>散度定理（高斯公式）</em> 进行展开计算，最后可以得到：</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/6808438-7dc2b735a6dc47de.JPG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="" /></p>
+
+<ul>
+<li>离散散度</li>
+</ul>
+
+<p>因为拉普拉斯算子的定义为是梯度的散度，对于每一个三角形T给定一个向量$\mathbf{w}$(如个给定分段线性函数$f$下的梯度向量)，则其散度为</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/6808438-93bab32df4ea58b0.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="" /></p>
+
+<h4 id="离散曲率">离散曲率</h4>
+
+<p>根据上面的式子，可以得到在离散形式下的 <strong>平均曲率</strong> ：</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/6808438-82412747b35a394a.JPG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="" /></p>
+
+<p>书中引用 <strong>Meyer et al. 03</strong> 这篇文章中提到了离散形式下 <strong>高斯曲率</strong> 的表示方式：</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/6808438-6640c416c441bb1f.JPG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="" /></p>
+
+<p>根据 <strong>高斯曲率</strong> 、<strong>平均曲率</strong> 和两个 <strong>主曲率</strong> 的关系，可以得到 <strong>主曲率</strong> 的计算方法：</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/6808438-75d86f734e3da122.JPG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="" /></p>
+
+<h4 id="离散形式的曲率张量">离散形式的曲率张量</h4>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/6808438-913b9400640120cd.JPG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="" /></p>
+
+<p>其中$\beta(\mathbf{e})$表示和边$\mathbf{e}$相邻三角形所在平面的有方向的二面角，$\mathbf{e} \cap A(v)$表示边$\mathbf{e}$在区域A中的长度，$\mathbf{\bar{e}}$指边$\mathbf{e}$的单位向量。</p></article>
+    <footer class="post-footer">
+      
+      <ul class="post-tags">
+        
+          <li><a href="https://BlauHimmel.github.io/tags/mesh"><span class="tag">Mesh</span></a></li>
+        
+          <li><a href="https://BlauHimmel.github.io/tags/%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0"><span class="tag">阅读笔记</span></a></li>
+        
+      </ul>
+      
+      <p class="post-copyright">
+        ©Copyright 2018
+      </p>
+    </footer>
+    
+      
+    
+  </section>
+  <footer class="site-footer">
+  <p>© 2017-2018 BlauHimmel&#39;s Blog</p>
+  <p>Powered by <a href="https://gohugo.io/" target="_blank">Hugo</a> with theme <a href="https://github.com/laozhu/hugo-nuo" target="_blank">Nuo</a>.</p>
+  
+</footer>
+
+
+
+<script async src="//cdn.bootcss.com/video.js/6.2.8/alt/video.novtt.min.js"></script>
+<script async src="//cdn.bootcss.com/mathjax/2.7.2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [['$','$'], ['\\(','\\)']],
+      displayMath: [['$$','$$'], ['\[','\]']],
+      processEscapes: true,
+      processEnvironments: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+      TeX: { equationNumbers: { autoNumber: "AMS" },
+      extensions: ["AMSmath.js", "AMSsymbols.js"] }
+    }
+  });
+</script>
+<script type="text/x-mathjax-config">
+  // Fix <code> tags after MathJax finishes running. This is a
+  // hack to overcome a shortcoming of Markdown. Discussion at
+  // https://github.com/mojombo/jekyll/issues/199
+  MathJax.Hub.Queue(() => {
+    MathJax.Hub.getAllJax().map(v => v.SourceElement().parentNode.className += ' has-jax');
+  });
+</script>
+
+<script src="https://BlauHimmel.github.io/js/bundle.js"></script>
+
+
+
+
+  </body>
+</html>
