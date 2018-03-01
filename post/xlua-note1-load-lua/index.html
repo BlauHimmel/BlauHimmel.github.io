@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <meta charset="utf-8" />
+
+  
+  <title>xLua学习笔记(1) 加载Lua代码</title>
+
+  
+  
+
+
+
+
+
+  
+  <meta name="author" content="BlauHimmel" />
+  <meta name="description" content="
+" />
+
+  
+  
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:site" content="@zhouyuming1104" />
+    <meta name="twitter:title" content="xLua学习笔记(1) 加载Lua代码" />
+    <meta name="twitter:description" content="
+" />
+    <meta name="twitter:image" content="https://BlauHimmel.github.io/img/avatar.jpg" />
+  
+
+  
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="xLua学习笔记(1) 加载Lua代码" />
+  <meta property="og:description" content="
+" />
+  <meta property="og:url" content="https://BlauHimmel.github.io/post/xlua-note1-load-lua/" />
+  <meta property="og:image" content="https://BlauHimmel.github.io/img/avatar.jpg" />
+
+
+
+
+<meta name="generator" content="Hugo 0.37" />
+
+
+<link rel="canonical" href="https://BlauHimmel.github.io/post/xlua-note1-load-lua/" />
+<link rel="alternative" href="https://BlauHimmel.github.io/index.xml" title="BlauHimmel&#39;s Blog" type="application/atom+xml" />
+
+
+<meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta name="format-detection" content="telephone=no,email=no,adress=no" />
+<meta http-equiv="Cache-Control" content="no-transform" />
+
+
+<meta name="robots" content="index,follow" />
+<meta name="referrer" content="origin-when-cross-origin" />
+
+
+
+
+
+
+
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="BlauHimmel&#39;s Blog" />
+<meta name="msapplication-tooltip" content="BlauHimmel&#39;s Blog" />
+<meta name='msapplication-navbutton-color' content="#5fbf5e" />
+<meta name="msapplication-TileColor" content="#5fbf5e" />
+<meta name="msapplication-TileImage" content="/img/tile-image-windows.png" />
+<link rel="icon" href="https://BlauHimmel.github.io/img/favicon.ico" />
+<link rel="icon" type="image/png" sizes="16x16" href="https://BlauHimmel.github.io/img/favicon-16x16.png" />
+<link rel="icon" type="image/png" sizes="32x32" href="https://BlauHimmel.github.io/img/favicon-32x32.png" />
+<link rel="icon" sizes="192x192" href="https://BlauHimmel.github.io/img/touch-icon-android.png" />
+<link rel="apple-touch-icon" href="https://BlauHimmel.github.io/img/touch-icon-apple.png" />
+<link rel="mask-icon" href="https://BlauHimmel.github.io/img/safari-pinned-tab.svg" color="#5fbf5e" />
+
+
+
+<link rel="stylesheet" href="//cdn.bootcss.com/video.js/6.2.8/alt/video-js-cdn.min.css" />
+
+<link rel="stylesheet" href="https://BlauHimmel.github.io/css/bundle.css" />
+
+
+  
+  <!--[if lt IE 9]>
+    <script src="//cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="//cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <script src="//cdn.bootcss.com/video.js/6.2.8/ie8/videojs-ie8.min.js"></script>
+  <![endif]-->
+
+<!--[if lte IE 11]>
+    <script src="//cdn.bootcss.com/classlist/1.1.20170427/classList.min.js"></script>
+  <![endif]-->
+
+
+<script src="//cdn.bootcss.com/object-fit-images/3.2.3/ofi.min.js"></script>
+
+
+<script src="//cdn.bootcss.com/smooth-scroll/12.1.4/js/smooth-scroll.polyfills.min.js"></script>
+
+
+</head>
+  <body>
+    
+    <div class="suspension">
+      <a title="Go to top" class="to-top is-hide"><span class="icon icon-up"></span></a>
+      
+        
+      
+    </div>
+    
+    
+  <header class="site-header">
+  <img class="avatar" src="https://BlauHimmel.github.io/img/avatar.png" alt="Avatar">
+  
+  <h2 class="title">BlauHimmel&#39;s Blog</h2>
+  
+  <p class="subtitle">A lazy programmer who is interested in game developing and computer graphic...</p>
+  <button class="menu-toggle" type="button">
+    <span class="icon icon-menu"></span>
+  </button>
+  <nav class="site-menu collapsed">
+    <h2 class="offscreen">Main Menu</h2>
+    <ul class="menu-list">
+      
+      
+      
+      
+        <li class="menu-item
+            
+            
+            
+              is-active
+            ">
+            <a href="https://BlauHimmel.github.io/">Home</a>
+          </li>
+      
+        <li class="menu-item
+            
+            
+            ">
+            <a href="https://BlauHimmel.github.io/tags/">Tags</a>
+          </li>
+      
+        <li class="menu-item
+            
+            
+            ">
+            <a href="https://BlauHimmel.github.io/about/">About</a>
+          </li>
+      
+    </ul>
+  </nav>
+  <nav class="social-menu collapsed">
+    <h2 class="offscreen">Social Networks</h2>
+    <ul class="social-list">
+
+      
+      <li class="social-item">
+        <a href="mailto:zhouyuming1104@qq.com" title="Email"><span class="icon icon-email"></span></a>
+      </li>
+
+      
+      <li class="social-item">
+        <a href="//github.com/BlauHimmel" title="GitHub"><span class="icon icon-github"></span></a>
+      </li>
+
+      <li class="social-item">
+        <a href="//twitter.com/zhouyuming1104" title="Twitter"><span class="icon icon-twitter"></span></a>
+      </li>
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <li class="social-item">
+        <a href="https://BlauHimmel.github.io/index.xml"><span class="icon icon-rss" title="RSS"></span></a>
+      </li>
+
+    </ul>
+  </nav>
+</header>
+
+  <section class="main post-detail">
+    <header class="post-header">
+      <h1 class="post-title">xLua学习笔记(1) 加载Lua代码</h1>
+      <p class="post-meta">@BlauHimmel · Mar 1, 2018 · 2 min read</p>
+    </header>
+    <article class="post-content"><p></p>
+
+<h1 id="xlua的安装">xLua的安装</h1>
+
+<p>首先从xLua的Github主页上下载资源包</p>
+
+<p><a href="https://github.com/Tencent/xLua">https://github.com/Tencent/xLua</a></p>
+
+<p>解压下载好的压缩包，将压缩包中Assets文件夹下的内容复制到Unity工程的Assets文件夹下即可</p>
+
+<p><img src="https://BlauHimmel.github.io/img/post/xLua-note1-load-Lua/img-0.png" alt="Assets文件夹" /></p>
+
+<h1 id="字符串加载">字符串加载</h1>
+
+<p>通过字符加载Lua代码的方式如下</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cs" data-lang="cs"><span style="color:#66d9ef">using</span> UnityEngine;
+<span style="color:#66d9ef">using</span> XLua;
+
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">XLuaLoad</span> : MonoBehaviour
+{
+
+    <span style="color:#66d9ef">private</span> LuaEnv luaenv;
+
+    <span style="color:#66d9ef">void</span> Start ()
+    {
+        luaenv = <span style="color:#66d9ef">new</span> LuaEnv();
+        <span style="color:#66d9ef">object</span><span style="color:#a6e22e">[]</span> returns = <span style="color:#a6e22e">luaenv</span>.DoString
+            (
+                <span style="color:#e6db74">@&#34;
+</span><span style="color:#e6db74">                print(&#39;load lua by string.&#39;)
+</span><span style="color:#e6db74">                return 1, &#39;hello&#39;
+</span><span style="color:#e6db74">                 &#34;</span>
+            );
+        <span style="color:#a6e22e">Debug</span>.Log(<span style="color:#e6db74">&#34;return value: &#34;</span> + returns<span style="color:#a6e22e">[0]</span> + <span style="color:#e6db74">&#34; &#34;</span> + returns<span style="color:#a6e22e">[1]</span>);
+    }
+
+    <span style="color:#66d9ef">void</span> Update ()
+    {
+        <span style="color:#66d9ef">if</span> (luaenv != <span style="color:#66d9ef">null</span>)
+        {
+            <span style="color:#a6e22e">luaenv</span>.Tick();
+        }
+    }
+
+    <span style="color:#66d9ef">void</span> Destroy()
+    {
+        <span style="color:#66d9ef">if</span> (luaenv != <span style="color:#66d9ef">null</span>)
+        {
+            <span style="color:#a6e22e">luaenv</span>.Dispose();
+        }
+    }
+}</code></pre></div>
+<p>将脚本挂载到任何一个游戏物体上，执行程序，可以得到</p>
+
+<p><img src="https://BlauHimmel.github.io/img/post/xLua-note1-load-Lua/img-1.png" alt="" /></p>
+
+<p>这里使用到了LuaEnv对象的DoString方法，该方法的定义如下</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cs" data-lang="cs"><span style="color:#66d9ef">object</span><span style="color:#a6e22e">[]</span> DoString(<span style="color:#66d9ef">string</span> chunk, <span style="color:#66d9ef">string</span> chunkName = <span style="color:#e6db74">&#34;chuck&#34;</span>, LuaTable env = <span style="color:#66d9ef">null</span>)</code></pre></div>
+<ul>
+<li><p>描述：</p>
+
+<p>执行一个代码块。</p></li>
+
+<li><p>参数：</p></li>
+</ul>
+
+<table>
+<thead>
+<tr>
+<th align="left">参数</th>
+<th align="left">说明</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td align="left">chunk</td>
+<td align="left">Lua代码字符串</td>
+</tr>
+
+<tr>
+<td align="left">chunkName</td>
+<td align="left">发生error时的debug显示信息中使用，指明某某代码块的某行错误</td>
+</tr>
+
+<tr>
+<td align="left">env</td>
+<td align="left">这个代码块</td>
+</tr>
+</tbody>
+</table>
+
+<ul>
+<li>返回值：</li>
+</ul>
+
+<p>代码块里return语句的返回值</p>
+
+<blockquote>
+<p>上面的代码中我们执行了</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cs" data-lang="cs">        <span style="color:#66d9ef">object</span><span style="color:#a6e22e">[]</span> returns = <span style="color:#a6e22e">luaenv</span>.DoString
+            (
+                <span style="color:#e6db74">@&#34;
+</span><span style="color:#e6db74">                print(&#39;load lua by string.&#39;)
+</span><span style="color:#e6db74">                return 1, &#39;hello&#39;
+</span><span style="color:#e6db74">                 &#34;</span>
+            );</code></pre></div>
+<p>DoString返回将包含两个object， 一个是double类型的1， 一个是string类型的“hello”</p>
+</blockquote>
+
+<h1 id="加载lua文件">加载Lua文件</h1>
+
+<p>新建一个lua文件，命名为 <strong>my_script.lua</strong> ，并向文件中写入下列测试代码</p>
+
+<p><img src="https://BlauHimmel.github.io/img/post/xLua-note1-load-Lua/img-2.png" alt="" /></p>
+
+<p>接下来将 <strong>my_script.lua</strong> 文件放到 <strong>Resources文件夹</strong> 下，修改 <strong>my_script.lua</strong> 文件的 <strong>后缀名</strong> 为 <strong>txt</strong></p>
+
+<p><img src="https://BlauHimmel.github.io/img/post/xLua-note1-load-Lua/img-3.png" alt="" /></p>
+
+<p>然后通过以下方式加载 <strong>my_script.lua</strong> 文件中的Lua代码</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cs" data-lang="cs"><span style="color:#66d9ef">using</span> UnityEngine;
+<span style="color:#66d9ef">using</span> XLua;
+
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">XLuaLoad</span> : MonoBehaviour
+{
+    <span style="color:#66d9ef">private</span> LuaEnv luaenv;
+
+    <span style="color:#66d9ef">void</span> Start ()
+    {
+        luaenv = <span style="color:#66d9ef">new</span> LuaEnv();
+        <span style="color:#a6e22e">luaenv</span>.DoString
+            (
+                <span style="color:#e6db74">@&#34;
+</span><span style="color:#e6db74">                require &#39;my_script&#39;
+</span><span style="color:#e6db74">                 &#34;</span>
+            );     
+    }
+
+    <span style="color:#66d9ef">void</span> Update ()
+    {
+        <span style="color:#66d9ef">if</span> (luaenv != <span style="color:#66d9ef">null</span>)
+        {
+            <span style="color:#a6e22e">luaenv</span>.Tick();
+        }
+    }
+
+    <span style="color:#66d9ef">void</span> Destroy()
+    {
+        <span style="color:#66d9ef">if</span> (luaenv != <span style="color:#66d9ef">null</span>)
+        {
+            <span style="color:#a6e22e">luaenv</span>.Dispose();
+        }
+    }
+}</code></pre></div>
+<p>仍然是调用LuaEnv对象的DoString方法，不过这里通过使用Lua的全局函数 <strong>require</strong> 函数来加载其它的文件，在加载的时候会使用默认的Loader去加载文件</p>
+
+<p>将脚本挂载到任何一个游戏物体上，执行程序，可以得到</p>
+
+<p><img src="https://BlauHimmel.github.io/img/post/xLua-note1-load-Lua/img-4.png" alt="" /></p>
+
+<p>使用上述方法加载Lua代码时需要注意：</p>
+
+<ol>
+<li><strong>Lua代码文件的文件名必须是XXX.lua.txt的格式，通过require引入的文件的时候只需要传入XXX</strong></li>
+<li><strong>Lua代码文件必须放在Resources文件夹下，不能放在Resources下的某个文件夹里</strong></li>
+</ol>
+
+<p>如果没有注意以上两点，运行的时候就会抛出异常，提示找不到文件</p>
+
+<p><img src="https://BlauHimmel.github.io/img/post/xLua-note1-load-Lua/img-5.png" alt="" /></p>
+
+<p>如果想要把Lua代码文件放在任意文件夹下的话，就需要使用AddLoader方法添加自定义的Loader</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cs" data-lang="cs"><span style="color:#66d9ef">void</span> AddLoader(CustomLoader loader)</code></pre></div>
+<ul>
+<li>描述
+增加一个自定义loader</li>
+</ul>
+
+<p>CustomLoader的定义为</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cs" data-lang="cs"><span style="color:#66d9ef">delegate</span> <span style="color:#66d9ef">byte</span><span style="color:#a6e22e">[]</span> CustomLoader(<span style="color:#66d9ef">ref</span> <span style="color:#66d9ef">string</span> filepath)</code></pre></div>
+<p>当一个文件被require时，这个loader会被回调其参数是require的参数，如果该loader找到文件，可以将其读进内存，返回一个byte数组。如果需要支持调试的话，而filepath要设置成IDE能找到的路径(相对或者绝对都可以)</p>
+
+<p>需要注意的是，require的参数是什么，loader在回调的时候filepath就会被设置为什么</p>
+
+<p>只需要对上面的代码进行略微修改即可</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cs" data-lang="cs"><span style="color:#66d9ef">using</span> UnityEngine;
+<span style="color:#66d9ef">using</span> XLua;
+
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">XLuaLoad</span> : MonoBehaviour
+{
+    <span style="color:#66d9ef">private</span> LuaEnv luaenv;
+
+    <span style="color:#66d9ef">void</span> Start ()
+    {
+        luaenv = <span style="color:#66d9ef">new</span> LuaEnv();
+        <span style="color:#a6e22e">luaenv</span>.AddLoader(LuaLoader);
+        <span style="color:#a6e22e">luaenv</span>.DoString
+            (
+                <span style="color:#e6db74">@&#34;
+</span><span style="color:#e6db74">                require &#39;lua/my_script&#39;
+</span><span style="color:#e6db74">                 &#34;</span>
+            );     
+    }
+
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">byte</span><span style="color:#a6e22e">[]</span> LuaLoader(<span style="color:#66d9ef">ref</span> <span style="color:#66d9ef">string</span> filepath)
+    {
+        TextAsset script = <span style="color:#a6e22e">Resources</span>.Load(<span style="color:#e6db74">&#34;lua/&#34;</span> + filepath + <span style="color:#e6db74">&#34;.lua&#34;</span>) <span style="color:#66d9ef">as</span> TextAsset;
+        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">script</span>.bytes;
+    }
+
+    <span style="color:#66d9ef">void</span> Update ()
+    {
+        <span style="color:#66d9ef">if</span> (luaenv != <span style="color:#66d9ef">null</span>)
+        {
+            <span style="color:#a6e22e">luaenv</span>.Tick();
+        }
+    }
+
+    <span style="color:#66d9ef">void</span> Destroy()
+    {
+        <span style="color:#66d9ef">if</span> (luaenv != <span style="color:#66d9ef">null</span>)
+        {
+            <span style="color:#a6e22e">luaenv</span>.Dispose();
+        }
+    }
+}</code></pre></div>
+<p>在LuaLoader中可以使用任何方式来加载Lua代码，只要最后返回代码字符的byte数组即可</p>
+
+<p>可以向LuaEnv中添加若干个Loader，在require的时候会依次调用每一个Loader，直到有一个Loader成功为止，如果全部失败则会抛出异常，提示找不到文件</p>
+
+<p>建议的加载Lua脚本方式是：整个程序就一个DoString(&ldquo;require &lsquo;main&rsquo;&rdquo;)，然后在main.lua加载其它脚本(类似lua脚本的命令行执行：lua main.lua)</p></article>
+    <footer class="post-footer">
+      
+      <ul class="post-tags">
+        
+          <li><a href="https://BlauHimmel.github.io/tags/unity3d"><span class="tag">Unity3D</span></a></li>
+        
+          <li><a href="https://BlauHimmel.github.io/tags/lua"><span class="tag">Lua</span></a></li>
+        
+          <li><a href="https://BlauHimmel.github.io/tags/xlua"><span class="tag">XLua</span></a></li>
+        
+          <li><a href="https://BlauHimmel.github.io/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0"><span class="tag">学习笔记</span></a></li>
+        
+      </ul>
+      
+      <p class="post-copyright">
+        ©Copyright 2018
+      </p>
+    </footer>
+    
+      
+    
+  </section>
+  <footer class="site-footer">
+  <p>© 2017-2018 BlauHimmel&#39;s Blog</p>
+  <p>Powered by <a href="https://gohugo.io/" target="_blank">Hugo</a> with theme <a href="https://github.com/laozhu/hugo-nuo" target="_blank">Nuo</a>.</p>
+  
+</footer>
+
+
+
+<script async src="//cdn.bootcss.com/video.js/6.2.8/alt/video.novtt.min.js"></script>
+<script async src="//cdn.bootcss.com/mathjax/2.7.2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [['$','$'], ['\\(','\\)']],
+      displayMath: [['$$','$$'], ['\[','\]']],
+      processEscapes: true,
+      processEnvironments: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+      TeX: { equationNumbers: { autoNumber: "AMS" },
+      extensions: ["AMSmath.js", "AMSsymbols.js"] }
+    }
+  });
+</script>
+<script type="text/x-mathjax-config">
+  // Fix <code> tags after MathJax finishes running. This is a
+  // hack to overcome a shortcoming of Markdown. Discussion at
+  // https://github.com/mojombo/jekyll/issues/199
+  MathJax.Hub.Queue(() => {
+    MathJax.Hub.getAllJax().map(v => v.SourceElement().parentNode.className += ' has-jax');
+  });
+</script>
+
+<script src="https://BlauHimmel.github.io/js/bundle.js"></script>
+
+
+
+
+  </body>
+</html>

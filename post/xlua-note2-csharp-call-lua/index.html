@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <meta charset="utf-8" />
+
+  
+  <title>xLua学习笔记(2) C#调用Lua代码</title>
+
+  
+  
+
+
+
+
+
+  
+  <meta name="author" content="BlauHimmel" />
+  <meta name="description" content="
+" />
+
+  
+  
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:site" content="@zhouyuming1104" />
+    <meta name="twitter:title" content="xLua学习笔记(2) C#调用Lua代码" />
+    <meta name="twitter:description" content="
+" />
+    <meta name="twitter:image" content="https://BlauHimmel.github.io/img/avatar.jpg" />
+  
+
+  
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="xLua学习笔记(2) C#调用Lua代码" />
+  <meta property="og:description" content="
+" />
+  <meta property="og:url" content="https://BlauHimmel.github.io/post/xlua-note2-csharp-call-lua/" />
+  <meta property="og:image" content="https://BlauHimmel.github.io/img/avatar.jpg" />
+
+
+
+
+<meta name="generator" content="Hugo 0.37" />
+
+
+<link rel="canonical" href="https://BlauHimmel.github.io/post/xlua-note2-csharp-call-lua/" />
+<link rel="alternative" href="https://BlauHimmel.github.io/index.xml" title="BlauHimmel&#39;s Blog" type="application/atom+xml" />
+
+
+<meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta name="format-detection" content="telephone=no,email=no,adress=no" />
+<meta http-equiv="Cache-Control" content="no-transform" />
+
+
+<meta name="robots" content="index,follow" />
+<meta name="referrer" content="origin-when-cross-origin" />
+
+
+
+
+
+
+
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="BlauHimmel&#39;s Blog" />
+<meta name="msapplication-tooltip" content="BlauHimmel&#39;s Blog" />
+<meta name='msapplication-navbutton-color' content="#5fbf5e" />
+<meta name="msapplication-TileColor" content="#5fbf5e" />
+<meta name="msapplication-TileImage" content="/img/tile-image-windows.png" />
+<link rel="icon" href="https://BlauHimmel.github.io/img/favicon.ico" />
+<link rel="icon" type="image/png" sizes="16x16" href="https://BlauHimmel.github.io/img/favicon-16x16.png" />
+<link rel="icon" type="image/png" sizes="32x32" href="https://BlauHimmel.github.io/img/favicon-32x32.png" />
+<link rel="icon" sizes="192x192" href="https://BlauHimmel.github.io/img/touch-icon-android.png" />
+<link rel="apple-touch-icon" href="https://BlauHimmel.github.io/img/touch-icon-apple.png" />
+<link rel="mask-icon" href="https://BlauHimmel.github.io/img/safari-pinned-tab.svg" color="#5fbf5e" />
+
+
+
+<link rel="stylesheet" href="//cdn.bootcss.com/video.js/6.2.8/alt/video-js-cdn.min.css" />
+
+<link rel="stylesheet" href="https://BlauHimmel.github.io/css/bundle.css" />
+
+
+  
+  <!--[if lt IE 9]>
+    <script src="//cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="//cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <script src="//cdn.bootcss.com/video.js/6.2.8/ie8/videojs-ie8.min.js"></script>
+  <![endif]-->
+
+<!--[if lte IE 11]>
+    <script src="//cdn.bootcss.com/classlist/1.1.20170427/classList.min.js"></script>
+  <![endif]-->
+
+
+<script src="//cdn.bootcss.com/object-fit-images/3.2.3/ofi.min.js"></script>
+
+
+<script src="//cdn.bootcss.com/smooth-scroll/12.1.4/js/smooth-scroll.polyfills.min.js"></script>
+
+
+</head>
+  <body>
+    
+    <div class="suspension">
+      <a title="Go to top" class="to-top is-hide"><span class="icon icon-up"></span></a>
+      
+        
+      
+    </div>
+    
+    
+  <header class="site-header">
+  <img class="avatar" src="https://BlauHimmel.github.io/img/avatar.png" alt="Avatar">
+  
+  <h2 class="title">BlauHimmel&#39;s Blog</h2>
+  
+  <p class="subtitle">A lazy programmer who is interested in game developing and computer graphic...</p>
+  <button class="menu-toggle" type="button">
+    <span class="icon icon-menu"></span>
+  </button>
+  <nav class="site-menu collapsed">
+    <h2 class="offscreen">Main Menu</h2>
+    <ul class="menu-list">
+      
+      
+      
+      
+        <li class="menu-item
+            
+            
+            
+              is-active
+            ">
+            <a href="https://BlauHimmel.github.io/">Home</a>
+          </li>
+      
+        <li class="menu-item
+            
+            
+            ">
+            <a href="https://BlauHimmel.github.io/tags/">Tags</a>
+          </li>
+      
+        <li class="menu-item
+            
+            
+            ">
+            <a href="https://BlauHimmel.github.io/about/">About</a>
+          </li>
+      
+    </ul>
+  </nav>
+  <nav class="social-menu collapsed">
+    <h2 class="offscreen">Social Networks</h2>
+    <ul class="social-list">
+
+      
+      <li class="social-item">
+        <a href="mailto:zhouyuming1104@qq.com" title="Email"><span class="icon icon-email"></span></a>
+      </li>
+
+      
+      <li class="social-item">
+        <a href="//github.com/BlauHimmel" title="GitHub"><span class="icon icon-github"></span></a>
+      </li>
+
+      <li class="social-item">
+        <a href="//twitter.com/zhouyuming1104" title="Twitter"><span class="icon icon-twitter"></span></a>
+      </li>
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <li class="social-item">
+        <a href="https://BlauHimmel.github.io/index.xml"><span class="icon icon-rss" title="RSS"></span></a>
+      </li>
+
+    </ul>
+  </nav>
+</header>
+
+  <section class="main post-detail">
+    <header class="post-header">
+      <h1 class="post-title">xLua学习笔记(2) C#调用Lua代码</h1>
+      <p class="post-meta">@BlauHimmel · Mar 1, 2018 · 3 min read</p>
+    </header>
+    <article class="post-content"><p></p>
+
+<h1 id="获取全局变量">获取全局变量</h1>
+
+<p>只需要调用LuaEnv对象Global属性的Get方法即可</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cs" data-lang="cs">LuaTable Global;</code></pre></div>
+<ul>
+<li>描述：
+代表lua全局环境的LuaTable</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cs" data-lang="cs">T Get&lt;T&gt;(<span style="color:#66d9ef">string</span> key);</code></pre></div>
+<ul>
+<li>描述：
+获取在key下，类型为T的value，如果不存在或者类型不匹配，返回null；</li>
+</ul>
+
+<p>例如有如下Lua代码</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-lua" data-lang="lua">number <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>
+
+string <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;hello world&#34;</span>
+
+boolean <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span></code></pre></div>
+<p>在C#中尝试用上述方法输出Lua中的全局变量number，string和boolean</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cs" data-lang="cs"><span style="color:#a6e22e">Debug</span>.Log(<span style="color:#e6db74">&#34;number = &#34;</span> + <span style="color:#a6e22e">luaenv</span>.<span style="color:#a6e22e">Global</span>.Get&lt;<span style="color:#66d9ef">int</span>&gt;(<span style="color:#e6db74">&#34;number&#34;</span>));
+<span style="color:#a6e22e">Debug</span>.Log(<span style="color:#e6db74">&#34;string = &#34;</span> + <span style="color:#a6e22e">luaenv</span>.<span style="color:#a6e22e">Global</span>.Get&lt;<span style="color:#66d9ef">string</span>&gt;(<span style="color:#e6db74">&#34;string&#34;</span>));
+<span style="color:#a6e22e">Debug</span>.Log(<span style="color:#e6db74">&#34;boolean = &#34;</span> + <span style="color:#a6e22e">luaenv</span>.<span style="color:#a6e22e">Global</span>.Get&lt;<span style="color:#66d9ef">bool</span>&gt;(<span style="color:#e6db74">&#34;boolean&#34;</span>));</code></pre></div>
+<p>得到结果</p>
+
+<p><img src="https://BlauHimmel.github.io/img/post/xLua-note2-CSharp-call-Lua/img-0.png" alt="" /></p>
+
+<p>如果需要获取Lua中 <strong>Table</strong> 的数据，则需要将Table映射为C#中相对应的数据结构，可选的方式有： <strong>class</strong> ， <strong>interface</strong> ， <strong>Dictionary</strong> ， <strong>List</strong> 和 <strong>LuaTable</strong></p>
+
+<p>假设有如下的Table</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-lua" data-lang="lua">table <span style="color:#f92672">=</span>
+{
+    f1 <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>,
+    f2 <span style="color:#f92672">=</span> <span style="color:#ae81ff">2</span>
+}</code></pre></div>
+<p>如果要使用 <strong>class</strong> 做映射，只需要在C#中定义一个相对应的类即可，注意变量名称要和Table中的名称相同，xLua会依次在table中寻找是否有与class中变量名相同的key值，如果有则将其value值复制到对应的变量上，如果在Table的Key值中找不到与定义的class的变量，则变量会被赋于对应类型的初值</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cs" data-lang="cs"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Table</span>
+{
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> f1;
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> f2;
+}</code></pre></div>
+<p>获取变量的方法还是和之前一样</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cs" data-lang="cs">Table table = <span style="color:#a6e22e">luaenv</span>.<span style="color:#a6e22e">Global</span>.Get&lt;Table&gt;(<span style="color:#e6db74">&#34;table&#34;</span>);
+<span style="color:#a6e22e">Debug</span>.Log(<span style="color:#e6db74">&#34;table.f1 = &#34;</span> + <span style="color:#a6e22e">table</span>.f1);
+<span style="color:#a6e22e">Debug</span>.Log(<span style="color:#e6db74">&#34;table.f2 = &#34;</span> + <span style="color:#a6e22e">table</span>.f2);</code></pre></div>
+<p>得到结果</p>
+
+<p><img src="https://BlauHimmel.github.io/img/post/xLua-note2-CSharp-call-Lua/img-1.png" alt="" /></p>
+
+<p>同样地，还可以使用 <strong>Dictionary</strong> 和 <strong>LuaTable</strong> (速度比较慢)来映射Table，代码如下</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cs" data-lang="cs">Dictionary&lt;<span style="color:#66d9ef">string</span>, <span style="color:#66d9ef">int</span>&gt; dict = <span style="color:#a6e22e">luaenv</span>.<span style="color:#a6e22e">Global</span>.Get&lt;Dictionary&lt;<span style="color:#66d9ef">string</span>, <span style="color:#66d9ef">int</span>&gt;&gt;(<span style="color:#e6db74">&#34;table&#34;</span>);
+<span style="color:#a6e22e">Debug</span>.Log(<span style="color:#e6db74">&#34;dict[f1] = &#34;</span> + dict<span style="color:#a6e22e">[&#34;f1&#34;]</span>);
+<span style="color:#a6e22e">Debug</span>.Log(<span style="color:#e6db74">&#34;dict[f2] = &#34;</span> + dict<span style="color:#a6e22e">[&#34;f2&#34;]</span>);
+
+LuaTable luaTable = <span style="color:#a6e22e">luaenv</span>.<span style="color:#a6e22e">Global</span>.Get&lt;LuaTable&gt;(<span style="color:#e6db74">&#34;table&#34;</span>);
+<span style="color:#a6e22e">Debug</span>.Log(<span style="color:#e6db74">&#34;luaTable.Get&lt;int&gt;(\&#34;f1\&#34;) = &#34;</span> + <span style="color:#a6e22e">luaTable</span>.Get&lt;<span style="color:#66d9ef">int</span>&gt;(<span style="color:#e6db74">&#34;f1&#34;</span>));
+<span style="color:#a6e22e">Debug</span>.Log(<span style="color:#e6db74">&#34;luaTable.Get&lt;int&gt;(\&#34;f2\&#34;) = &#34;</span> + <span style="color:#a6e22e">luaTable</span>.Get&lt;<span style="color:#66d9ef">int</span>&gt;(<span style="color:#e6db74">&#34;f2&#34;</span>));</code></pre></div>
+<p>得到结果</p>
+
+<p><img src="https://BlauHimmel.github.io/img/post/xLua-note2-CSharp-call-Lua/img-2.png" alt="" /></p>
+
+<p><img src="https://BlauHimmel.github.io/img/post/xLua-note2-CSharp-call-Lua/img-3.png" alt="" /></p>
+
+<p>对于下面这种Table，可以使用 <strong>List</strong> 来做映射</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-lua" data-lang="lua">table <span style="color:#f92672">=</span>
+{
+    <span style="color:#ae81ff">1</span>,
+    <span style="color:#ae81ff">2</span>
+}</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cs" data-lang="cs">List&lt;<span style="color:#66d9ef">int</span>&gt; list = <span style="color:#a6e22e">luaenv</span>.<span style="color:#a6e22e">Global</span>.Get&lt;List&lt;<span style="color:#66d9ef">int</span>&gt;&gt;(<span style="color:#e6db74">&#34;table&#34;</span>);
+<span style="color:#a6e22e">Debug</span>.Log(<span style="color:#e6db74">&#34;list[0] = &#34;</span> + list<span style="color:#a6e22e">[0]</span>);
+<span style="color:#a6e22e">Debug</span>.Log(<span style="color:#e6db74">&#34;list[1] = &#34;</span> + list<span style="color:#a6e22e">[1]</span>);</code></pre></div>
+<p>得到结果</p>
+
+<p><img src="https://BlauHimmel.github.io/img/post/xLua-note2-CSharp-call-Lua/img-4.png" alt="" /></p>
+
+<p>如果Table中存在函数，例如</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-lua" data-lang="lua">table <span style="color:#f92672">=</span>
+{
+    f1 <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>,
+    f2 <span style="color:#f92672">=</span> <span style="color:#ae81ff">2</span>,
+    add <span style="color:#f92672">=</span> <span style="color:#66d9ef">function</span>(self, num1, num2)
+        <span style="color:#66d9ef">return</span> num1 <span style="color:#f92672">+</span> num2
+    <span style="color:#66d9ef">end</span>
+}</code></pre></div>
+<p>可以使用 <strong>interface</strong> 来映射，对于上述的Table，可以声明如下ITable接口</p>
+
+<p>使用这种方法读取Table时需要 <strong>生成代码</strong> ，所以 <strong>必须</strong> 要给接口加上一个Attribute： <strong>CSharpCallLua</strong></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cs" data-lang="cs"><span style="color:#a6e22e">[CSharpCallLua]</span>
+<span style="color:#66d9ef">interface</span> ITable
+{
+    <span style="color:#66d9ef">int</span> f1 { <span style="color:#66d9ef">get</span>; <span style="color:#66d9ef">set</span>; }
+    <span style="color:#66d9ef">int</span> f2 { <span style="color:#66d9ef">get</span>; <span style="color:#66d9ef">set</span>; }
+
+    <span style="color:#66d9ef">int</span> <span style="color:#66d9ef">add</span>(<span style="color:#66d9ef">int</span> num1, <span style="color:#66d9ef">int</span> num2);
+}</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cs" data-lang="cs">ITable iTable = <span style="color:#a6e22e">luaenv</span>.<span style="color:#a6e22e">Global</span>.Get&lt;ITable&gt;(<span style="color:#e6db74">&#34;table&#34;</span>);
+<span style="color:#a6e22e">Debug</span>.Log(<span style="color:#e6db74">&#34;table.f1 = &#34;</span> + <span style="color:#a6e22e">iTable</span>.f1);
+<span style="color:#a6e22e">Debug</span>.Log(<span style="color:#e6db74">&#34;table.f2 = &#34;</span> + <span style="color:#a6e22e">iTable</span>.f2);
+<span style="color:#a6e22e">Debug</span>.Log(<span style="color:#e6db74">&#34;table.add(1, 2) = &#34;</span> + <span style="color:#a6e22e">iTable</span>.<span style="color:#66d9ef">add</span>(<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2</span>));</code></pre></div>
+<p>得到结果</p>
+
+<p><img src="https://BlauHimmel.github.io/img/post/xLua-note2-CSharp-call-Lua/img-5.png" alt="" /></p>
+
+<h1 id="获取全局函数">获取全局函数</h1>
+
+<p>一般来说，全局函数的映射方式有两种，一种是使用 <strong>delegate</strong> (要生成代码，性能好)，另一种是使用 <strong>LuaFunction</strong> (不用生成代码，性能较差)。</p>
+
+<p>假设有下列的全局函数</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-lua" data-lang="lua"><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">action0</span>()
+    print (<span style="color:#e6db74">&#34;action0() called!&#34;</span>)
+<span style="color:#66d9ef">end</span></code></pre></div>
+<p>因为使用 <strong>delegate</strong> 的方式映射全局函数需要生成代码，所以 <strong>必须</strong> 要添加一个Attribute： <strong>CSharpCallLua</strong></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cs" data-lang="cs"><span style="color:#a6e22e">[CSharpCallLua]</span>
+<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">delegate</span> <span style="color:#66d9ef">void</span> Action0();</code></pre></div>
+<p>获取的方式大同小异</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cs" data-lang="cs">Action0 action0 = <span style="color:#a6e22e">luaenv</span>.<span style="color:#a6e22e">Global</span>.Get&lt;Action0&gt;(<span style="color:#e6db74">&#34;action0&#34;</span>);
+action0();</code></pre></div>
+<p>得到结果</p>
+
+<p><img src="https://BlauHimmel.github.io/img/post/xLua-note2-CSharp-call-Lua/img-6.png" alt="" /></p>
+
+<p>当全局函数有一个或多个返回值的时候，按照在函数中的返回顺序， <strong>从左到右</strong> 依次对应到 <strong>delegate</strong> 的 <strong>返回值</strong> ， <strong>ref</strong> / <strong>out</strong> 参数</p>
+
+<p>假设有下列的全局函数</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-lua" data-lang="lua"><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">action2</span>(param1, param2)
+    print(<span style="color:#e6db74">&#34;param1:&#34;</span>, param1, <span style="color:#e6db74">&#34; param2:&#34;</span>, param2)
+    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">1</span>, {f1 <span style="color:#f92672">=</span> <span style="color:#ae81ff">2</span>}
+<span style="color:#66d9ef">end</span></code></pre></div>
+<p>那么下面六种 <strong>delegate</strong> 的映射方式是等效的，</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cs" data-lang="cs"><span style="color:#a6e22e">[CSharpCallLua]</span>
+<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">delegate</span> <span style="color:#66d9ef">int</span> Action2(<span style="color:#66d9ef">int</span> param1, <span style="color:#66d9ef">int</span> param2, <span style="color:#66d9ef">out</span> Table table);<span style="color:#a6e22e">
+</span><span style="color:#a6e22e">
+</span><span style="color:#a6e22e">[CSharpCallLua]</span>
+<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">delegate</span> <span style="color:#66d9ef">int</span> Action2_(<span style="color:#66d9ef">int</span> param1, <span style="color:#66d9ef">int</span> param2, <span style="color:#66d9ef">ref</span> Table table);<span style="color:#a6e22e">
+</span><span style="color:#a6e22e">
+</span><span style="color:#a6e22e">[CSharpCallLua]</span>
+<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">delegate</span> <span style="color:#66d9ef">void</span> Action2__(<span style="color:#66d9ef">int</span> param1, <span style="color:#66d9ef">int</span> param2, <span style="color:#66d9ef">out</span> <span style="color:#66d9ef">int</span> val ,<span style="color:#66d9ef">out</span> Table table);<span style="color:#a6e22e">
+</span><span style="color:#a6e22e">
+</span><span style="color:#a6e22e">[CSharpCallLua]</span>
+<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">delegate</span> <span style="color:#66d9ef">void</span> Action2___(<span style="color:#66d9ef">int</span> param1, <span style="color:#66d9ef">int</span> param2, <span style="color:#66d9ef">ref</span> <span style="color:#66d9ef">int</span> val, <span style="color:#66d9ef">ref</span> Table table);<span style="color:#a6e22e">
+</span><span style="color:#a6e22e">
+</span><span style="color:#a6e22e">[CSharpCallLua]</span>
+<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">delegate</span> <span style="color:#66d9ef">void</span> Action2____(<span style="color:#66d9ef">int</span> param1, <span style="color:#66d9ef">int</span> param2, <span style="color:#66d9ef">ref</span> <span style="color:#66d9ef">int</span> val, <span style="color:#66d9ef">out</span> Table table);<span style="color:#a6e22e">
+</span><span style="color:#a6e22e">
+</span><span style="color:#a6e22e">[CSharpCallLua]</span>
+<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">delegate</span> <span style="color:#66d9ef">void</span> Action2_____(<span style="color:#66d9ef">int</span> param1, <span style="color:#66d9ef">int</span> param2, <span style="color:#66d9ef">out</span> <span style="color:#66d9ef">int</span> val, <span style="color:#66d9ef">ref</span> Table table);</code></pre></div>
+<p><strong>delegate</strong> 的返回值也可以是 <strong>delegate</strong> ，假设有下列的全局函数</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-lua" data-lang="lua"><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">action0</span>()
+    print (<span style="color:#e6db74">&#34;action0() called!&#34;</span>)
+<span style="color:#66d9ef">end</span>
+
+<span style="color:#66d9ef">function</span> <span style="color:#a6e22e">get_action0</span>()
+    print(<span style="color:#e6db74">&#34;get_action0() called!&#34;</span>)
+    <span style="color:#66d9ef">return</span> action0
+<span style="color:#66d9ef">end</span></code></pre></div>
+<p>先定义Action0，然后将GetAction0的返回值设为Action0即可</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cs" data-lang="cs"><span style="color:#a6e22e">[CSharpCallLua]</span>
+<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">delegate</span> <span style="color:#66d9ef">void</span> Action0();<span style="color:#a6e22e">
+</span><span style="color:#a6e22e">
+</span><span style="color:#a6e22e">[CSharpCallLua]</span>
+<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">delegate</span> Action0 GetAction0();</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-lua" data-lang="lua">GetAction0 getAction0 <span style="color:#f92672">=</span> luaenv.Global.Get<span style="color:#f92672">&lt;</span>GetAction0<span style="color:#f92672">&gt;</span>(<span style="color:#e6db74">&#34;get_action0&#34;</span>);
+(getAction0())();</code></pre></div>
+<p>运行得到结果</p>
+
+<p><img src="https://BlauHimmel.github.io/img/post/xLua-note2-CSharp-call-Lua/img-7.png" alt="" /></p>
+
+<p>使用 <strong>LuaFunction</strong> 来映射全局函数的方法与使用 <strong>delegate</strong> 时基本相同，映射后如果要在C#中使用函数，只需要调用 <strong>LuaFunction</strong> 对象的Call方法即可，Call方法有下面两种重载形式</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cs" data-lang="cs"><span style="color:#66d9ef">object</span><span style="color:#a6e22e">[]</span> Call(<span style="color:#66d9ef">params</span> <span style="color:#66d9ef">object</span><span style="color:#a6e22e">[]</span> args)</code></pre></div>
+<ul>
+<li>描述：
+以可变参数调用Lua函数，并返回该调用的返回值。</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cs" data-lang="cs"><span style="color:#66d9ef">object</span><span style="color:#a6e22e">[]</span> Call(<span style="color:#66d9ef">object</span><span style="color:#a6e22e">[]</span> args, Type<span style="color:#a6e22e">[]</span> returnTypes)</code></pre></div>
+<ul>
+<li>描述：
+调用Lua函数，并指明返回参数的类型，系统会自动按指定类型进行转换。</li>
+</ul>
+
+<p>需要注意的是，当函数有返回值的时候，最好指明返回参数的类型，如果没有指明类型，在将object对象转换具体类型的时候可能会InvalidCastException异常</p>
+
+<p>假设有下面的全局函数</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-lua" data-lang="lua"><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">action2</span>(param1, param2)
+    print(<span style="color:#e6db74">&#34;param1:&#34;</span>, param1, <span style="color:#e6db74">&#34; param2:&#34;</span>, param2)
+    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">1</span>, {f1 <span style="color:#f92672">=</span> <span style="color:#ae81ff">2</span>}
+<span style="color:#66d9ef">end</span></code></pre></div>
+<p>下面的C#代码使用LuaFunction调用该全局函数</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cs" data-lang="cs">LuaFunction luaFunction = <span style="color:#a6e22e">luaenv</span>.<span style="color:#a6e22e">Global</span>.Get&lt;LuaFunction&gt;(<span style="color:#e6db74">&#34;action2&#34;</span>);
+<span style="color:#66d9ef">object</span><span style="color:#a6e22e">[]</span> vals = <span style="color:#a6e22e">luaFunction</span>.Call(<span style="color:#66d9ef">new</span> <span style="color:#66d9ef">object</span><span style="color:#a6e22e">[]</span>{<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2</span>}, <span style="color:#66d9ef">new</span> Type<span style="color:#a6e22e">[]</span> { <span style="color:#66d9ef">typeof</span>(<span style="color:#66d9ef">int</span>), <span style="color:#66d9ef">typeof</span>(Table) });
+<span style="color:#a6e22e">Debug</span>.Log(<span style="color:#e6db74">&#34;vals[0] = &#34;</span> + (<span style="color:#66d9ef">int</span>)vals<span style="color:#a6e22e">[0]</span>);
+<span style="color:#a6e22e">Debug</span>.Log(<span style="color:#e6db74">&#34;vals[1] = &#34;</span> + ((Table)vals<span style="color:#a6e22e">[1]</span>).f1);</code></pre></div>
+<p>得到结果</p>
+
+<p><img src="https://BlauHimmel.github.io/img/post/xLua-note2-CSharp-call-Lua/img-8.png" alt="" /></p>
+
+<p><strong>LuaFunction</strong> 访问Lua函数的过程涉及到了多次的装箱与拆箱操作，虽然不用生成代码，但是性能的消耗是比较大的</p>
+
+<p>由于访问Lua全局数据，特别是table以及function，代价比较大，推荐使用单独的模块负责管理其加载，而不是每次用之前去加载</p>
+
+<h1 id="资源释放">资源释放</h1>
+
+<p>下面这段这段C#代码首先将Lua函数test映射到了委托action上，使用完成后调用了LuaEnv的Dispose方法回收了LuaEnv对象</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cs" data-lang="cs"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">SpecialCase</span> : MonoBehaviour
+{<span style="color:#a6e22e">
+</span><span style="color:#a6e22e">    [CSharpCallLua]</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">delegate</span> <span style="color:#66d9ef">void</span> Action();
+
+    <span style="color:#66d9ef">private</span> LuaEnv luaenv;
+    <span style="color:#66d9ef">private</span> Action action;
+
+    <span style="color:#66d9ef">void</span> Start ()
+    {
+        luaenv = <span style="color:#66d9ef">new</span> LuaEnv();
+        <span style="color:#a6e22e">luaenv</span>.DoString
+            (
+                <span style="color:#e6db74">@&#34;
+</span><span style="color:#e6db74">                    function test()
+</span><span style="color:#e6db74">                        print(&#39;test&#39;)
+</span><span style="color:#e6db74">                    end
+</span><span style="color:#e6db74">                &#34;</span>
+            );
+        action = <span style="color:#a6e22e">luaenv</span>.<span style="color:#a6e22e">Global</span>.Get&lt;Action&gt;(<span style="color:#e6db74">&#34;test&#34;</span>);
+        <span style="color:#a6e22e">luaenv</span>.Dispose();
+    }
+}</code></pre></div>
+<p>运行上面这段代码，发现抛出了如下的异常</p>
+
+<p><img src="https://BlauHimmel.github.io/img/post/xLua-note2-CSharp-call-Lua/img-9.png" alt="" /></p>
+
+<p>查阅<a href="https://github.com/Tencent/xLua/blob/ad47200c213729368e68b590d0054610d225634c/Assets/XLua/Doc/faq.md#调用luaenvdispose时报try-to-dispose-a-luaenv-with-c-callback错是什么原因">FAQ</a></p>
+
+<blockquote>
+<h1 id="调用luaenv-dispose时-报-try-to-dispose-a-luaenv-with-c-callback-错是什么原因">调用LuaEnv.Dispose时，报“try to dispose a LuaEnv with C# callback!”错是什么原因？</h1>
+
+<p>这是由于C#还存在指向lua虚拟机里头某个函数的delegate，为了防止业务在虚拟机释放后调用这些无效(因为其引用的lua函数所在虚拟机都释放了)delegate导致的异常甚至崩溃，做了这个检查</p>
+
+<p>怎么解决？释放这些delegate即可，所谓释放，在C#中，就是没有引用</p>
+
+<p>你是在C#通过LuaTable.Get获取并保存到对象成员，赋值该成员为null</p>
+
+<p>你是在lua那把lua函数注册到一些事件事件回调，反注册这些回调</p>
+
+<p>如果你是通过xlua.hotfix(class, method, func)注入到C#，则通过xlua.hotfix(class, method, nil)删除</p>
+
+<p>要注意以上操作在Dispose之前完成</p>
+</blockquote>
+
+<p>因此，只需要在LuaEnv释放之前，将Lua函数映射的委托变量action设置为null即可</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-lua" data-lang="lua">action <span style="color:#f92672">=</span> luaenv.Global.Get<span style="color:#f92672">&lt;</span>Action<span style="color:#f92672">&gt;</span>(<span style="color:#e6db74">&#34;test&#34;</span>);
+action <span style="color:#f92672">=</span> null;
+luaenv.Dispose();</code></pre></div></article>
+    <footer class="post-footer">
+      
+      <ul class="post-tags">
+        
+          <li><a href="https://BlauHimmel.github.io/tags/unity3d"><span class="tag">Unity3D</span></a></li>
+        
+          <li><a href="https://BlauHimmel.github.io/tags/lua"><span class="tag">Lua</span></a></li>
+        
+          <li><a href="https://BlauHimmel.github.io/tags/xlua"><span class="tag">XLua</span></a></li>
+        
+          <li><a href="https://BlauHimmel.github.io/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0"><span class="tag">学习笔记</span></a></li>
+        
+      </ul>
+      
+      <p class="post-copyright">
+        ©Copyright 2018
+      </p>
+    </footer>
+    
+      
+    
+  </section>
+  <footer class="site-footer">
+  <p>© 2017-2018 BlauHimmel&#39;s Blog</p>
+  <p>Powered by <a href="https://gohugo.io/" target="_blank">Hugo</a> with theme <a href="https://github.com/laozhu/hugo-nuo" target="_blank">Nuo</a>.</p>
+  
+</footer>
+
+
+
+<script async src="//cdn.bootcss.com/video.js/6.2.8/alt/video.novtt.min.js"></script>
+<script async src="//cdn.bootcss.com/mathjax/2.7.2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [['$','$'], ['\\(','\\)']],
+      displayMath: [['$$','$$'], ['\[','\]']],
+      processEscapes: true,
+      processEnvironments: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+      TeX: { equationNumbers: { autoNumber: "AMS" },
+      extensions: ["AMSmath.js", "AMSsymbols.js"] }
+    }
+  });
+</script>
+<script type="text/x-mathjax-config">
+  // Fix <code> tags after MathJax finishes running. This is a
+  // hack to overcome a shortcoming of Markdown. Discussion at
+  // https://github.com/mojombo/jekyll/issues/199
+  MathJax.Hub.Queue(() => {
+    MathJax.Hub.getAllJax().map(v => v.SourceElement().parentNode.className += ' has-jax');
+  });
+</script>
+
+<script src="https://BlauHimmel.github.io/js/bundle.js"></script>
+
+
+
+
+  </body>
+</html>

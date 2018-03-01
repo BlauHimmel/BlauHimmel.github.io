@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <meta charset="utf-8" />
+
+  
+  <title>xLua学习笔记(3) Lua调用C#代码</title>
+
+  
+  
+
+
+
+
+
+  
+  <meta name="author" content="BlauHimmel" />
+  <meta name="description" content="
+" />
+
+  
+  
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:site" content="@zhouyuming1104" />
+    <meta name="twitter:title" content="xLua学习笔记(3) Lua调用C#代码" />
+    <meta name="twitter:description" content="
+" />
+    <meta name="twitter:image" content="https://BlauHimmel.github.io/img/avatar.jpg" />
+  
+
+  
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="xLua学习笔记(3) Lua调用C#代码" />
+  <meta property="og:description" content="
+" />
+  <meta property="og:url" content="https://BlauHimmel.github.io/post/xlua-note3-lua-call-csharp/" />
+  <meta property="og:image" content="https://BlauHimmel.github.io/img/avatar.jpg" />
+
+
+
+
+<meta name="generator" content="Hugo 0.37" />
+
+
+<link rel="canonical" href="https://BlauHimmel.github.io/post/xlua-note3-lua-call-csharp/" />
+<link rel="alternative" href="https://BlauHimmel.github.io/index.xml" title="BlauHimmel&#39;s Blog" type="application/atom+xml" />
+
+
+<meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta name="format-detection" content="telephone=no,email=no,adress=no" />
+<meta http-equiv="Cache-Control" content="no-transform" />
+
+
+<meta name="robots" content="index,follow" />
+<meta name="referrer" content="origin-when-cross-origin" />
+
+
+
+
+
+
+
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="BlauHimmel&#39;s Blog" />
+<meta name="msapplication-tooltip" content="BlauHimmel&#39;s Blog" />
+<meta name='msapplication-navbutton-color' content="#5fbf5e" />
+<meta name="msapplication-TileColor" content="#5fbf5e" />
+<meta name="msapplication-TileImage" content="/img/tile-image-windows.png" />
+<link rel="icon" href="https://BlauHimmel.github.io/img/favicon.ico" />
+<link rel="icon" type="image/png" sizes="16x16" href="https://BlauHimmel.github.io/img/favicon-16x16.png" />
+<link rel="icon" type="image/png" sizes="32x32" href="https://BlauHimmel.github.io/img/favicon-32x32.png" />
+<link rel="icon" sizes="192x192" href="https://BlauHimmel.github.io/img/touch-icon-android.png" />
+<link rel="apple-touch-icon" href="https://BlauHimmel.github.io/img/touch-icon-apple.png" />
+<link rel="mask-icon" href="https://BlauHimmel.github.io/img/safari-pinned-tab.svg" color="#5fbf5e" />
+
+
+
+<link rel="stylesheet" href="//cdn.bootcss.com/video.js/6.2.8/alt/video-js-cdn.min.css" />
+
+<link rel="stylesheet" href="https://BlauHimmel.github.io/css/bundle.css" />
+
+
+  
+  <!--[if lt IE 9]>
+    <script src="//cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="//cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <script src="//cdn.bootcss.com/video.js/6.2.8/ie8/videojs-ie8.min.js"></script>
+  <![endif]-->
+
+<!--[if lte IE 11]>
+    <script src="//cdn.bootcss.com/classlist/1.1.20170427/classList.min.js"></script>
+  <![endif]-->
+
+
+<script src="//cdn.bootcss.com/object-fit-images/3.2.3/ofi.min.js"></script>
+
+
+<script src="//cdn.bootcss.com/smooth-scroll/12.1.4/js/smooth-scroll.polyfills.min.js"></script>
+
+
+</head>
+  <body>
+    
+    <div class="suspension">
+      <a title="Go to top" class="to-top is-hide"><span class="icon icon-up"></span></a>
+      
+        
+      
+    </div>
+    
+    
+  <header class="site-header">
+  <img class="avatar" src="https://BlauHimmel.github.io/img/avatar.png" alt="Avatar">
+  
+  <h2 class="title">BlauHimmel&#39;s Blog</h2>
+  
+  <p class="subtitle">A lazy programmer who is interested in game developing and computer graphic...</p>
+  <button class="menu-toggle" type="button">
+    <span class="icon icon-menu"></span>
+  </button>
+  <nav class="site-menu collapsed">
+    <h2 class="offscreen">Main Menu</h2>
+    <ul class="menu-list">
+      
+      
+      
+      
+        <li class="menu-item
+            
+            
+            
+              is-active
+            ">
+            <a href="https://BlauHimmel.github.io/">Home</a>
+          </li>
+      
+        <li class="menu-item
+            
+            
+            ">
+            <a href="https://BlauHimmel.github.io/tags/">Tags</a>
+          </li>
+      
+        <li class="menu-item
+            
+            
+            ">
+            <a href="https://BlauHimmel.github.io/about/">About</a>
+          </li>
+      
+    </ul>
+  </nav>
+  <nav class="social-menu collapsed">
+    <h2 class="offscreen">Social Networks</h2>
+    <ul class="social-list">
+
+      
+      <li class="social-item">
+        <a href="mailto:zhouyuming1104@qq.com" title="Email"><span class="icon icon-email"></span></a>
+      </li>
+
+      
+      <li class="social-item">
+        <a href="//github.com/BlauHimmel" title="GitHub"><span class="icon icon-github"></span></a>
+      </li>
+
+      <li class="social-item">
+        <a href="//twitter.com/zhouyuming1104" title="Twitter"><span class="icon icon-twitter"></span></a>
+      </li>
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <li class="social-item">
+        <a href="https://BlauHimmel.github.io/index.xml"><span class="icon icon-rss" title="RSS"></span></a>
+      </li>
+
+    </ul>
+  </nav>
+</header>
+
+  <section class="main post-detail">
+    <header class="post-header">
+      <h1 class="post-title">xLua学习笔记(3) Lua调用C#代码</h1>
+      <p class="post-meta">@BlauHimmel · Mar 1, 2018 · 6 min read</p>
+    </header>
+    <article class="post-content"><p></p>
+
+<p>将下列代码挂载到任何一个GameObject上，这样就能在Unity中加载并执行 <strong>Resources/Lua</strong> 文件夹下的 <strong>csharp_call.lua.txt</strong> 文件中Lua代码了</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cs" data-lang="cs"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">CSharpRun</span> : MonoBehaviour
+{
+    <span style="color:#66d9ef">private</span> LuaEnv luaenv;
+
+    <span style="color:#66d9ef">void</span> Start ()
+    {
+        luaenv = <span style="color:#66d9ef">new</span> LuaEnv();
+        <span style="color:#a6e22e">luaenv</span>.AddLoader(LuaLoader);
+        <span style="color:#a6e22e">luaenv</span>.DoString
+            (
+                <span style="color:#e6db74">@&#34;
+</span><span style="color:#e6db74">                require &#39;csharp_call&#39;
+</span><span style="color:#e6db74">                &#34;</span>
+            );
+    }
+
+    <span style="color:#66d9ef">void</span> Update ()
+    {
+        <span style="color:#66d9ef">if</span> (luaenv != <span style="color:#66d9ef">null</span>)
+        {
+            <span style="color:#a6e22e">luaenv</span>.Tick();
+        }
+    }
+
+    <span style="color:#66d9ef">void</span> Destroy()
+    {
+        <span style="color:#66d9ef">if</span> (luaenv != <span style="color:#66d9ef">null</span>)
+        {
+            <span style="color:#a6e22e">luaenv</span>.Dispose();
+        }
+    }
+
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">byte</span><span style="color:#a6e22e">[]</span> LuaLoader(<span style="color:#66d9ef">ref</span> <span style="color:#66d9ef">string</span> filename)
+    {
+        TextAsset text = <span style="color:#a6e22e">Resources</span>.Load(<span style="color:#e6db74">&#34;Lua/&#34;</span> + filename + <span style="color:#e6db74">&#34;.lua&#34;</span>) <span style="color:#66d9ef">as</span> TextAsset;
+        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">text</span>.bytes;
+    }
+}</code></pre></div>
+<h1 id="访问c-方法-属性">访问C#方法、属性</h1>
+
+<p>使用下列Lua代码来创建两个GameObject对象，访问对象的name属性并调用其SetActive方法</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-lua" data-lang="lua"><span style="color:#75715e">--创建C#对象</span>
+<span style="color:#66d9ef">local</span> go1 <span style="color:#f92672">=</span> CS.UnityEngine.GameObject(<span style="color:#e6db74">&#34;Cube&#34;</span>)
+<span style="color:#66d9ef">local</span> go2 <span style="color:#f92672">=</span> CS.UnityEngine.GameObject(<span style="color:#e6db74">&#34;Sphere&#34;</span>)
+
+<span style="color:#75715e">--访问对象属性</span>
+print(<span style="color:#e6db74">&#34;GameObject1:&#34;</span>, go1.name, <span style="color:#e6db74">&#34;GameObject2:&#34;</span>, go2.name)
+
+<span style="color:#75715e">--修改对象属性</span>
+go1.name <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;Cube--&#34;</span>
+go2.name <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;Sphere--&#34;</span>
+print(<span style="color:#e6db74">&#34;GameObject1:&#34;</span>, go1.name, <span style="color:#e6db74">&#34;GameObject2:&#34;</span>, go2.name)
+
+<span style="color:#75715e">--调用对象方法(调用对象方法时注意使用&#34;:&#34;语法糖)</span>
+go1:SetActive(<span style="color:#66d9ef">false</span>)  <span style="color:#75715e">--go1.SetActive(go1, false) 也可以这样调用</span>
+go2:SetActive(<span style="color:#66d9ef">false</span>)  <span style="color:#75715e">--go2.SetActive(go2, false) 也可以这样调用</span></code></pre></div>
+<p>运行得到结果，GameObject的名字被成功地修改</p>
+
+<p><img src="https://BlauHimmel.github.io/img/post/xLua-note3-Lua-call-CSharp/img-0.png" alt="" /></p>
+
+<p>游戏物体Cube和Sphere被创建到了Hierarchy下，同时被设置Enable状态</p>
+
+<p><img src="https://BlauHimmel.github.io/img/post/xLua-note3-Lua-call-CSharp/img-1.png" alt="" /></p>
+
+<h1 id="访问c-静态方法-静态属性">访问C#静态方法、静态属性</h1>
+
+<p>下面的Lua代码：
+1. 获取Time类的引用
+2. 读取Time类的静态属性deltaTime
+3. 修改了Time类的静态属性timeScale
+4. 获取GameObject类的引用
+5. 调用GameObject类的静态方法Find，找到场景中的主相机Main Camera</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-lua" data-lang="lua"><span style="color:#75715e">--读取静态属性</span>
+<span style="color:#66d9ef">local</span> Time <span style="color:#f92672">=</span> CS.UnityEngine.Time
+print(<span style="color:#e6db74">&#34;Time.deltaTime:&#34;</span>, Time.deltaTime)
+
+<span style="color:#75715e">--修改静态属性</span>
+print(<span style="color:#e6db74">&#34;Time.timeScale Before:&#34;</span>, Time.timeScale)
+Time.timeScale <span style="color:#f92672">=</span> <span style="color:#ae81ff">0.5</span>
+print(<span style="color:#e6db74">&#34;Time.timeScale After:&#34;</span>, Time.timeScale)
+
+<span style="color:#75715e">--调用静态方法(调用静态方法时可以直接使用&#34;.&#34;)</span>
+<span style="color:#66d9ef">local</span> GameObject <span style="color:#f92672">=</span> CS.UnityEngine.GameObject
+<span style="color:#66d9ef">local</span> mainCamera <span style="color:#f92672">=</span> GameObject.Find(<span style="color:#e6db74">&#34;Main Camera&#34;</span>)
+print(<span style="color:#e6db74">&#34;mainCamera:&#34;</span>, mainCamera.name)</code></pre></div>
+<p>运行得到结果</p>
+
+<p><img src="https://BlauHimmel.github.io/img/post/xLua-note3-Lua-call-CSharp/img-2.png" alt="" /></p>
+
+<h1 id="访问自定义的c-类">访问自定义的C#类</h1>
+
+<p>如果要通过Lua访问自己定义的类的话，需要给被Lua代码访问的类加上一个Attribute: <strong>LuaCallCSharp</strong> ，用来生成Lua的适配代码</p>
+
+<p>下面对 <strong>LuaCallCSharp</strong> 的解释参考xLua的Github主页的<a href="https://github.com/Tencent/xLua/blob/master/Assets/XLua/Doc/faq.md#luacallsharp以及csharpcalllua">FAQ</a></p>
+
+<blockquote>
+<h1 id="xlua-luacallcsharp">XLua.LuaCallCSharp</h1>
+
+<p>一个C#类型加了这个配置，xLua会生成这个类型的适配代码(包括构造该类型实例，访问其成员属性、方法，静态属性、方法)，否则将会尝试用性能较低的反射方式来访问。</p>
+
+<p>一个类型的扩展方法(Extension Methods)加了这配置，也会生成适配代码并追加到被扩展类型的成员方法上。</p>
+
+<p>xLua只会生成加了该配置的类型，不会自动生成其父类的适配代码，当访问子类对象的父类方法，如果该父类加了LuaCallCSharp配置，则执行父类的适配代码，否则会尝试用反射来访问。</p>
+
+<p>反射访问除了性能不佳之外，在il2cpp下还有可能因为代码剪裁而导致无法访问，后者可以通过下面介绍的ReflectionUse标签来避免。</p>
+
+<h1 id="xlua-reflectionuse">XLua.ReflectionUse</h1>
+
+<p>一个C#类型类型加了这个配置，xLua会生成link.xml阻止il2cpp的代码剪裁。</p>
+
+<p>对于扩展方法，必须加上LuaCallCSharp或者ReflectionUse才可以被访问到。</p>
+
+<p>建议所有要在Lua访问的类型，要么加LuaCallCSharp，要么加上ReflectionUse，这才能够保证在各平台都能正常运行。</p>
+</blockquote>
+
+<p>下面定义 <strong>BaseClass</strong> 和 <strong>DeriveClass</strong> ，其中 <strong>BaseClass</strong> 是 <strong>DeriveClass</strong> 的基类</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cs" data-lang="cs"><span style="color:#a6e22e">[LuaCallCSharp]</span>
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">BaseClass</span>
+{
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">string</span> BaseField = <span style="color:#e6db74">&#34;BaseField&#34;</span>;
+
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">string</span> _BaseProperty = <span style="color:#e6db74">&#34;BaseProperty&#34;</span>;
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">string</span> BaseProperty
+    {
+        <span style="color:#66d9ef">set</span> { _BaseProperty = <span style="color:#66d9ef">value</span>; }
+        <span style="color:#66d9ef">get</span> { <span style="color:#66d9ef">return</span> _BaseProperty; }
+    }
+
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">string</span> BaseStatic = <span style="color:#e6db74">&#34;BaseStatic&#34;</span>;
+
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">string</span> _BaseStaticProperty = <span style="color:#e6db74">&#34;BaseStaticProperty&#34;</span>;
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">string</span> BaseStaticProperty
+    {
+        <span style="color:#66d9ef">set</span> { _BaseStaticProperty = <span style="color:#66d9ef">value</span>; }
+        <span style="color:#66d9ef">get</span> { <span style="color:#66d9ef">return</span> _BaseStaticProperty; }
+    }
+
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> BasePrint()
+    {
+        <span style="color:#a6e22e">Debug</span>.Log(<span style="color:#e6db74">&#34;BasePrint() Called.&#34;</span>);
+    }
+
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> BaseStaticPrint()
+    {
+        <span style="color:#a6e22e">Debug</span>.Log(<span style="color:#e6db74">&#34;BaseStaticPrint() Called.&#34;</span>);
+    }
+}<span style="color:#a6e22e">
+</span><span style="color:#a6e22e">
+</span><span style="color:#a6e22e">[LuaCallCSharp]</span>
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">DeriveClass</span> : BaseClass
+{
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">string</span> DeriveField = <span style="color:#e6db74">&#34;DeriveField&#34;</span>;
+
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">string</span> _DeriveProperty = <span style="color:#e6db74">&#34;BaseDeriveProperty&#34;</span>;
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">string</span> DeriveProperty
+    {
+        <span style="color:#66d9ef">set</span> { _DeriveProperty = <span style="color:#66d9ef">value</span>; }
+        <span style="color:#66d9ef">get</span> { <span style="color:#66d9ef">return</span> _DeriveProperty; }
+    }
+
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">string</span> DeriveStatic = <span style="color:#e6db74">&#34;DeriveStatic&#34;</span>;
+
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">string</span> _DeriveStaticProperty = <span style="color:#e6db74">&#34;DeriveStaticProperty&#34;</span>;
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">string</span> DeriveStaticProperty
+    {
+        <span style="color:#66d9ef">set</span> { _DeriveStaticProperty = <span style="color:#66d9ef">value</span>; }
+        <span style="color:#66d9ef">get</span> { <span style="color:#66d9ef">return</span> _DeriveStaticProperty; }
+    }
+
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> DerivePrint()
+    {
+        <span style="color:#a6e22e">Debug</span>.Log(<span style="color:#e6db74">&#34;DerivePrint() Called.&#34;</span>);
+    }
+
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> DeriveStaticPrint()
+    {
+        <span style="color:#a6e22e">Debug</span>.Log(<span style="color:#e6db74">&#34;DeriveStaticPrint() Called.&#34;</span>);
+    }
+}</code></pre></div>
+<p>访问的方式和之前访问Unity中类的方式相同，另外xLua中除了能够 <strong>访问</strong> 和 <strong>修改</strong> 类自身的成员以外，还支持在派生类中 <strong>访问</strong> 和 <strong>修改</strong> 基类的成员，访问的规则和C#中相同</p>
+
+<p>另外，访问权限不足时，Lua中相应的变量会被赋值为nil</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-lua" data-lang="lua"><span style="color:#66d9ef">local</span> BaseClass <span style="color:#f92672">=</span> CS.BaseClass
+<span style="color:#66d9ef">local</span> baseClass <span style="color:#f92672">=</span> CS.BaseClass()
+
+<span style="color:#66d9ef">local</span> DeriveClass <span style="color:#f92672">=</span> CS.DeriveClass
+<span style="color:#66d9ef">local</span> deriveClass <span style="color:#f92672">=</span> CS.DeriveClass()
+
+print(<span style="color:#e6db74">&#39;----------Base----------&#39;</span>)
+print(baseClass.BaseField)
+print(baseClass.BaseProperty)
+baseClass:BasePrint()
+
+print(BaseClass.BaseStatic)
+print(BaseClass.BaseStaticProperty)
+BaseClass.BaseStaticPrint()
+
+print(<span style="color:#e6db74">&#39;---------Derive---------&#39;</span>)
+print(deriveClass.DeriveField)
+print(deriveClass.DeriveProperty)
+deriveClass:DerivePrint()
+
+print(DeriveClass.DeriveStatic)
+print(DeriveClass.DeriveStaticProperty)
+DeriveClass.DeriveStaticPrint()
+
+print(<span style="color:#e6db74">&#39;------Derive-&gt;Base------&#39;</span>)
+print(deriveClass.BaseField)
+print(deriveClass.BaseProperty)
+deriveClass:BasePrint()
+
+print(DeriveClass.BaseStatic)
+print(DeriveClass.BaseStaticProperty)
+DeriveClass.BaseStaticPrint()</code></pre></div>
+<h1 id="访问c-复杂函数">访问C#复杂函数</h1>
+
+<ul>
+<li><p>对于参数，Lua会 <strong>从左到右</strong> 取C#函数中的 <strong>普通参数</strong> 或者 <strong>ref参数</strong> 依次作为自己的参数</p></li>
+
+<li><p>对于返回值，Lua会 <strong>从左到右</strong> 取C#函数中的 <strong>返回值</strong> 、 <strong>ref参数</strong> 或者 <strong>out参数</strong> 依次作为自己的返回值</p></li>
+</ul>
+
+<p>例如，对于下面的函数ComplexFunction</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cs" data-lang="cs"><span style="color:#a6e22e">[LuaCallCSharp]</span>
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">ComplexClass</span>
+{
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">string</span> ComplexFunction(<span style="color:#66d9ef">int</span> arg0, <span style="color:#66d9ef">ref</span> <span style="color:#66d9ef">int</span> arg1, <span style="color:#66d9ef">string</span> arg2, <span style="color:#66d9ef">out</span> <span style="color:#66d9ef">string</span> arg3, Parameter param)
+    {
+        <span style="color:#a6e22e">Debug</span>.Log(<span style="color:#e6db74">&#34;=========C#=========&#34;</span>);
+        <span style="color:#a6e22e">Debug</span>.Log(<span style="color:#e6db74">&#34;arg0:&#34;</span> + arg0);
+        <span style="color:#a6e22e">Debug</span>.Log(<span style="color:#e6db74">&#34;arg1:&#34;</span> + arg1);
+        <span style="color:#a6e22e">Debug</span>.Log(<span style="color:#e6db74">&#34;arg2:&#34;</span> + arg2);
+        <span style="color:#a6e22e">Debug</span>.Log(<span style="color:#e6db74">&#34;arg3:&#34;</span>);
+        <span style="color:#a6e22e">Debug</span>.Log(<span style="color:#e6db74">&#34;Parameter:&#34;</span> + param);
+
+        arg1++;
+        arg3 = <span style="color:#e6db74">&#34;3(string)&#34;</span>;
+
+        <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;ComplexFunction return.&#34;</span>;
+    }
+}<span style="color:#a6e22e">
+</span><span style="color:#a6e22e">
+</span><span style="color:#a6e22e">[LuaCallCSharp]</span>
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Parameter</span>
+{
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> param1;
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">string</span> param2;
+
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">override</span> <span style="color:#66d9ef">string</span> ToString()
+    {
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">string</span>.Format(<span style="color:#e6db74">&#34;param1:{0} param2:{1}&#34;</span>, param1, param2);
+    }
+}</code></pre></div>
+<p>按照上面的原则，首先 <strong>从左到右</strong> 检索函数ComplexFunction的普通参数或ref参数</p>
+
+<p>结果为：arg0,arg1,arg2,param</p>
+
+<p>所以在Lua中调用时需要传入以上四个参数</p>
+
+<p>接下来 <strong>从左到右</strong> 检索函数的返回值、ref参数或者out参数</p>
+
+<p>结果为：ComplexFunction函数的返回值,arg1,arg3</p>
+
+<p>所以在Lua中将返回上述4个值</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-lua" data-lang="lua"><span style="color:#66d9ef">local</span> complexClass <span style="color:#f92672">=</span> CS.ComplexClass()
+<span style="color:#66d9ef">local</span> ret, arg1, arg3 <span style="color:#f92672">=</span> complexClass:ComplexFunction(
+    <span style="color:#ae81ff">0</span>,
+    <span style="color:#ae81ff">1</span>,
+    <span style="color:#e6db74">&#34;2(string)&#34;</span>,
+    {param1 <span style="color:#f92672">=</span> <span style="color:#ae81ff">3</span>, param2 <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;4(string)&#34;</span>}
+    )
+
+print(<span style="color:#e6db74">&#34;=========Lua========&#34;</span>)
+print(<span style="color:#e6db74">&#34;ret:&#34;</span>, ret)
+print(<span style="color:#e6db74">&#34;arg1:&#34;</span>, arg1)
+print(<span style="color:#e6db74">&#34;arg3:&#34;</span>, arg3)</code></pre></div>
+<p>运行得到结果</p>
+
+<p><img src="https://BlauHimmel.github.io/img/post/xLua-note3-Lua-call-CSharp/img-3.png" alt="" /></p>
+
+<h1 id="操作符重载和函数重载">操作符重载和函数重载</h1>
+
+<p>C#中定义的操作符重载和函数重载在Lua中基本上能够使用，不过需要注意的是由于Lua中表示数值的类型只有一种(number)，所以C#中对于数值类型之间的重载是不能够正确的识别的，通常只会调用类型符合的重载函数列表中先定义的函数</p>
+
+<p>假设有下面两个C#类，在Vector类中重载了操作符&rdquo;+&ldquo;，在Overload类中对函数Add进行了重载，类型分别是int，float和string</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cs" data-lang="cs"><span style="color:#a6e22e">[LuaCallCSharp]</span>
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Vector</span>
+{
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> x;
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> y;
+
+    <span style="color:#66d9ef">public</span> Vector(<span style="color:#66d9ef">int</span> x, <span style="color:#66d9ef">int</span> y)
+    {
+        <span style="color:#66d9ef">this</span>.x = x;
+        <span style="color:#66d9ef">this</span>.y = y;
+    }
+
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> Vector <span style="color:#66d9ef">operator</span> +(Vector vec1, Vector vec2)
+    {      
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> Vector(<span style="color:#a6e22e">vec1</span>.x + <span style="color:#a6e22e">vec2</span>.x, <span style="color:#a6e22e">vec1</span>.y + <span style="color:#a6e22e">vec2</span>.y);
+    }
+}<span style="color:#a6e22e">
+</span><span style="color:#a6e22e">
+</span><span style="color:#a6e22e">[LuaCallCSharp]</span>
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Overload</span>
+{
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> Add(<span style="color:#66d9ef">int</span> num1, <span style="color:#66d9ef">int</span> num2)
+    {
+        <span style="color:#a6e22e">Debug</span>.Log(<span style="color:#e6db74">&#34;Add-int&#34;</span>);
+        <span style="color:#66d9ef">return</span> num1 + num2;
+    }
+
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">float</span> Add(<span style="color:#66d9ef">float</span> num1, <span style="color:#66d9ef">float</span> num2)
+    {
+        <span style="color:#a6e22e">Debug</span>.Log(<span style="color:#e6db74">&#34;Add-float&#34;</span>);
+        <span style="color:#66d9ef">return</span> num1 + num2;
+    }
+
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">string</span> Add(<span style="color:#66d9ef">string</span> num1, <span style="color:#66d9ef">string</span> num2)
+    {
+        <span style="color:#a6e22e">Debug</span>.Log(<span style="color:#e6db74">&#34;Add-string&#34;</span>);
+        <span style="color:#66d9ef">return</span> num1 + num2;
+    }
+}</code></pre></div>
+<p>接下来使用Lua来访问进行验证，首先定义了两个Vector并相加，接着尝试向Overload的Add函数中传入整数，浮点数和字符串</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-lua" data-lang="lua"><span style="color:#66d9ef">local</span> vec1 <span style="color:#f92672">=</span> CS.Vector(<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">1</span>)
+<span style="color:#66d9ef">local</span> vec2 <span style="color:#f92672">=</span> CS.Vector(<span style="color:#ae81ff">2</span>,<span style="color:#ae81ff">3</span>)
+<span style="color:#66d9ef">local</span> vec3 <span style="color:#f92672">=</span> vec1 <span style="color:#f92672">+</span> vec2
+print(<span style="color:#e6db74">&#34;x:&#34;</span>, vec3.x, <span style="color:#e6db74">&#34;y:&#34;</span>, vec3.y)
+
+<span style="color:#66d9ef">local</span> overload <span style="color:#f92672">=</span> CS.Overload()
+overload:Add(<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>)
+overload:Add(<span style="color:#ae81ff">2.0</span>, <span style="color:#ae81ff">2.0</span>)
+overload:Add(<span style="color:#e6db74">&#34;3&#34;</span>, <span style="color:#e6db74">&#34;3&#34;</span>)</code></pre></div>
+<p>通过运行可以看到结果如下</p>
+
+<p><img src="https://BlauHimmel.github.io/img/post/xLua-note3-Lua-call-CSharp/img-4.png" alt="" /></p>
+
+<p>由于在Lua中只有一种数值类型(number)，所以参数为int和float类型的Add函数都满足要求，这个时候会调用先定义的重载函数，也就是重载为int类型的Add</p>
+
+<p>当先定义参数float类型后定义int类型的Add函数时，Lua代码调用就是参数类型为float的Add函数了</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cs" data-lang="cs"><span style="color:#a6e22e">[LuaCallCSharp]</span>
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Overload</span>
+{
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">float</span> Add(<span style="color:#66d9ef">float</span> num1, <span style="color:#66d9ef">float</span> num2)
+    {
+        <span style="color:#a6e22e">Debug</span>.Log(<span style="color:#e6db74">&#34;Add-float&#34;</span>);
+        <span style="color:#66d9ef">return</span> num1 + num2;
+    }
+
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> Add(<span style="color:#66d9ef">int</span> num1, <span style="color:#66d9ef">int</span> num2)
+    {
+        <span style="color:#a6e22e">Debug</span>.Log(<span style="color:#e6db74">&#34;Add-int&#34;</span>);
+        <span style="color:#66d9ef">return</span> num1 + num2;
+    }
+
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">string</span> Add(<span style="color:#66d9ef">string</span> num1, <span style="color:#66d9ef">string</span> num2)
+    {
+        <span style="color:#a6e22e">Debug</span>.Log(<span style="color:#e6db74">&#34;Add-string&#34;</span>);
+        <span style="color:#66d9ef">return</span> num1 + num2;
+    }
+}</code></pre></div>
+<p>更换顺序后结果发生了变化</p>
+
+<p><img src="https://BlauHimmel.github.io/img/post/xLua-note3-Lua-call-CSharp/img-5.png" alt="" /></p>
+
+<h1 id="可变参数与默认参数">可变参数与默认参数</h1>
+
+<p>定义SpecialParam类，包含一个有默认参数的函数和一个有可变参数的函数</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cs" data-lang="cs"><span style="color:#a6e22e">[LuaCallCSharp]</span>
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">SpecialParam</span>
+{
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> DefaultParam(<span style="color:#66d9ef">int</span> arg0, <span style="color:#66d9ef">string</span> arg1 = <span style="color:#e6db74">&#34;1&#34;</span>, <span style="color:#66d9ef">int</span> arg2 = <span style="color:#ae81ff">2</span>)
+    {
+        <span style="color:#a6e22e">Debug</span>.Log(<span style="color:#e6db74">&#34;arg0:&#34;</span> + arg0);
+        <span style="color:#a6e22e">Debug</span>.Log(<span style="color:#e6db74">&#34;arg1:&#34;</span> + arg1);
+        <span style="color:#a6e22e">Debug</span>.Log(<span style="color:#e6db74">&#34;arg2:&#34;</span> + arg2);
+    }
+
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> VariableParam(<span style="color:#66d9ef">int</span> arg0, <span style="color:#66d9ef">params</span> <span style="color:#66d9ef">string</span><span style="color:#a6e22e">[]</span> args)
+    {
+        <span style="color:#a6e22e">Debug</span>.Log(<span style="color:#e6db74">&#34;arg0:&#34;</span> + arg0);
+        <span style="color:#a6e22e">Debug</span>.Log(<span style="color:#e6db74">&#34;args:&#34;</span>);
+        <span style="color:#66d9ef">foreach</span> (<span style="color:#66d9ef">string</span> arg <span style="color:#66d9ef">in</span> args)
+        {
+            <span style="color:#a6e22e">Debug</span>.Log(arg + <span style="color:#e6db74">&#34; &#34;</span>);
+        }
+    }
+}</code></pre></div>
+<p>在Lua中调用它们的时候，参数的规则与C#中相同</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-lua" data-lang="lua"><span style="color:#66d9ef">local</span> specialParam <span style="color:#f92672">=</span> CS.SpecialParam()
+specialParam:DefaultParam(<span style="color:#ae81ff">1</span>, <span style="color:#e6db74">&#34;3&#34;</span>)
+print(<span style="color:#e6db74">&#34;================================&#34;</span>)
+specialParam:VariableParam(<span style="color:#ae81ff">0</span>, <span style="color:#e6db74">&#34;1&#34;</span>, <span style="color:#e6db74">&#34;2&#34;</span>, <span style="color:#e6db74">&#34;3&#34;</span>, <span style="color:#e6db74">&#34;4&#34;</span>)</code></pre></div>
+<p>输出结果</p>
+
+<p><img src="https://BlauHimmel.github.io/img/post/xLua-note3-Lua-call-CSharp/img-6.png" alt="" /></p>
+
+<h1 id="访问c-枚举">访问C#枚举</h1>
+
+<p>定义枚举Language和EnumParam类，EnumParam类中的PrintEnum函数会根据传入枚举的类型输出不同的日志</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cs" data-lang="cs"><span style="color:#a6e22e">[LuaCallCSharp]</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">enum</span> Language
+{
+    C_PLUS_PLUS,
+    C_SHARP
+}<span style="color:#a6e22e">
+</span><span style="color:#a6e22e">
+</span><span style="color:#a6e22e">[LuaCallCSharp]</span>
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">EnumParam</span>
+{
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> PrintEnum(Language language)
+    {
+        <span style="color:#66d9ef">switch</span> (language)
+        {
+            <span style="color:#66d9ef">case</span> <span style="color:#a6e22e">Language</span>.C_PLUS_PLUS:
+                <span style="color:#a6e22e">Debug</span>.Log(<span style="color:#e6db74">&#34;C++&#34;</span>);
+                <span style="color:#66d9ef">break</span>;
+            <span style="color:#66d9ef">case</span> <span style="color:#a6e22e">Language</span>.C_SHARP:
+                <span style="color:#a6e22e">Debug</span>.Log(<span style="color:#e6db74">&#34;C#&#34;</span>);
+                <span style="color:#66d9ef">break</span>;
+        }
+    }
+}</code></pre></div>
+<p>在Lua中有以下五种方法可以访问到枚举变量：
+1. 当作普通的静态属性访问
+2. 使用<strong>CastFrom函数，从枚举值对应的数值做类型转换
+3. 使用</strong>CastFrom函数，从枚举值对应的字符串做类型转换
+4. 直接传入枚举值对应的数值
+5. 直接传入枚举值对应的字符串</p>
+
+<p>官方文档上只提到了前三种方法，并且方法2和方法3需要生成代码才能使用，不过经过实验发现，不生成代码时上述五种方法都能够使用</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-lua" data-lang="lua"><span style="color:#66d9ef">local</span> enumParam <span style="color:#f92672">=</span> CS.EnumParam()
+<span style="color:#66d9ef">local</span> Language <span style="color:#f92672">=</span> CS.Language
+
+enumParam:PrintEnum(Language.C_PLUS_PLUS)
+enumParam:PrintEnum(Language.__CastFrom(<span style="color:#ae81ff">0</span>))
+enumParam:PrintEnum(Language.__CastFrom(<span style="color:#e6db74">&#34;C_PLUS_PLUS&#34;</span>))
+enumParam:PrintEnum(<span style="color:#ae81ff">0</span>)
+enumParam:PrintEnum(<span style="color:#e6db74">&#34;C_PLUS_PLUS&#34;</span>)
+
+enumParam:PrintEnum(Language.C_SHARP)
+enumParam:PrintEnum(Language.__CastFrom(<span style="color:#ae81ff">1</span>))
+enumParam:PrintEnum(Language.__CastFrom(<span style="color:#e6db74">&#34;C_SHARP&#34;</span>))
+enumParam:PrintEnum(<span style="color:#ae81ff">1</span>)
+enumParam:PrintEnum(<span style="color:#e6db74">&#34;C_SHARP&#34;</span>)</code></pre></div>
+<p>输出结果</p>
+
+<p><img src="https://BlauHimmel.github.io/img/post/xLua-note3-Lua-call-CSharp/img-7.png" alt="" /></p>
+
+<h1 id="访问c-委托">访问C#委托</h1>
+
+<p>下面的DelegateClass类定义了一个接受string类型参数无返回值的委托类型，3个委托变量action，actionString1和actionString2</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cs" data-lang="cs"><span style="color:#a6e22e">[LuaCallCSharp]</span>
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">DelegateClass</span>
+{
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">delegate</span> <span style="color:#66d9ef">void</span> ActionString(<span style="color:#66d9ef">string</span> arg);
+
+    <span style="color:#66d9ef">public</span> ActionString action = (arg) =&gt;
+        {
+            <span style="color:#a6e22e">Debug</span>.Log(<span style="color:#e6db74">&#34;action:&#34;</span> + arg);
+        };
+
+    <span style="color:#66d9ef">public</span> ActionString actionString1 = (arg) =&gt;
+        {
+            <span style="color:#a6e22e">Debug</span>.Log(<span style="color:#e6db74">&#34;actionString1:&#34;</span> + arg);
+        };
+
+    <span style="color:#66d9ef">public</span> ActionString actionString2 = (arg) =&gt;
+        {
+            <span style="color:#a6e22e">Debug</span>.Log(<span style="color:#e6db74">&#34;actionString2:&#34;</span> + arg);
+        };
+}</code></pre></div>
+<p>在使用Lua代码访问C#委托时需要注意，访问委托类型的方式与访问静态变量的方式相同，访问(静态/非静态)委托的变量的方式与访问(静态/非静态)成员变量的方式相同</p>
+
+<p>由于在Lua中没有&rdquo;+=&ldquo;和&rdquo;-=&ldquo;操作符，在增加委托链的时候只能使用&rdquo;+&ldquo;和&rdquo;-&ldquo;操作符</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-lua" data-lang="lua"><span style="color:#66d9ef">local</span> delegateClass <span style="color:#f92672">=</span> CS.DelegateClass()
+<span style="color:#75715e">--使用DelegateClass类的对象访问委托变量action</span>
+<span style="color:#66d9ef">local</span> action1 <span style="color:#f92672">=</span> delegateClass.action
+action1(<span style="color:#e6db74">&#34;hi-1&#34;</span>)
+action1 <span style="color:#f92672">=</span> action1 <span style="color:#f92672">+</span> delegateClass.actionString1 <span style="color:#f92672">+</span> delegateClass.actionString2
+action1(<span style="color:#e6db74">&#34;hi-2&#34;</span>)
+action1 <span style="color:#f92672">=</span> action1 <span style="color:#f92672">-</span> delegateClass.actionString2
+action1(<span style="color:#e6db74">&#34;hi-3&#34;</span>)
+
+<span style="color:#75715e">--使用DelegateClass类访问委托类型ActionString，定义一个ActionString类型的委托变量action2</span>
+<span style="color:#75715e">--此时action2的值为nil</span>
+<span style="color:#66d9ef">local</span> action2 <span style="color:#f92672">=</span> CS.DelegateClass.ActionString
+action2 <span style="color:#f92672">=</span> delegateClass.actionString1
+action2(<span style="color:#e6db74">&#34;hi-4&#34;</span>)
+action2 <span style="color:#f92672">=</span> action2 <span style="color:#f92672">+</span> delegateClass.actionString2
+action2(<span style="color:#e6db74">&#34;hi-5&#34;</span>)
+action2 <span style="color:#f92672">=</span> action2 <span style="color:#f92672">-</span> delegateClass.actionString2
+action2(<span style="color:#e6db74">&#34;hi-6&#34;</span>)</code></pre></div>
+<p>输出结果</p>
+
+<p><img src="https://BlauHimmel.github.io/img/post/xLua-note3-Lua-call-CSharp/img-8.png" alt="" /></p>
+
+<p>在增减委托链的时候除了可以使用C#委托变量外，还可以使用Lua函数</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-lua" data-lang="lua"><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">lua_action</span>(arg)
+    print(<span style="color:#e6db74">&#34;lua_action:&#34;</span>, arg)
+<span style="color:#66d9ef">end</span>
+
+<span style="color:#66d9ef">local</span> action <span style="color:#f92672">=</span> CS.DelegateClass.ActionString
+action <span style="color:#f92672">=</span> lua_action
+action(<span style="color:#e6db74">&#34;hi&#34;</span>)</code></pre></div>
+<p>访问C#事件</p>
+
+<p>下面的EventClass类定义了一个无参数无返回值的委托类型EventAction和基于委托类型EventAction的事件Events，同时提供了两个定义好的委托类型action1和action2，和一个触发事件的函数TriggerEvent</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cs" data-lang="cs"><span style="color:#a6e22e">[LuaCallCSharp]</span>
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">EventClass</span>
+{<span style="color:#a6e22e">
+</span><span style="color:#a6e22e">    [CSharpCallLua]</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">delegate</span> <span style="color:#66d9ef">void</span> EventAction();
+
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">event</span> EventAction Events;
+
+    <span style="color:#66d9ef">public</span> EventAction action1 = () =&gt;
+        {
+            <span style="color:#a6e22e">Debug</span>.Log(<span style="color:#e6db74">&#34;action1&#34;</span>);
+        };
+
+    <span style="color:#66d9ef">public</span> EventAction action2 = () =&gt;
+        {
+            <span style="color:#a6e22e">Debug</span>.Log(<span style="color:#e6db74">&#34;action2&#34;</span>);
+        };
+
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> TriggerEvent()
+    {
+        Events();
+    }
+}</code></pre></div>
+<p>在访问C#事件的时候需要 <strong>生成代码</strong> ，所以必须要为事件的委托类型加上一个Attribute： <strong>CSharpCallLua</strong> ，关于为什么这里需要加 <strong>CSharpCallLua</strong> 而不是LuaCallCSharp，在xLua的github主页的<a href="https://github.com/Tencent/xLua/blob/master/Assets/XLua/Doc/faq.md#luacallsharp以及csharpcalllua">FAQ</a>上作者是这么解释的：</p>
+
+<blockquote>
+<h1 id="luacallcsharp以及csharpcalllua两种生成各在什么场景下用">LuaCallCSharp以及CSharpCallLua两种生成各在什么场景下用？</h1>
+
+<p>看调用者和被调用者，比如要在lua调用C#的GameObject.Find函数，或者调用gameobject的实例方法，属性等，GameObject类要加LuaCallSharp，而想把一个lua函数挂到UI回调，这是调用者是C#，被调用的是一个lua函数，所以回调声明的delegate要加CSharpCallLua。</p>
+
+<p>有时会比较迷惑人，比如List.Find(Predicate match)的调用，List当然是加LuaCallSharp，而Predicate却要加CSharpCallLua，因为match的调用者在C#，被调用的是一个lua函数。</p>
+
+<p>更无脑一点的方式是看到“This delegate/interface must add to CSharpCallLua : XXX”，就把XXX加到CSharpCallLua即可。</p>
+</blockquote>
+
+<p>在添加事件的时候，既可以使用C#中的委托变量，也可以使用Lua中的函数</p>
+
+<p>同时在添加和移除事件的时候应该使用以下的方式</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-lua" data-lang="lua">object:event(<span style="color:#e6db74">&#34;+&#34;</span>, delegate)</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-lua" data-lang="lua">object:event(<span style="color:#e6db74">&#34;-&#34;</span>, delegate)</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-lua" data-lang="lua"><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">lua_action</span>()
+    print(<span style="color:#e6db74">&#34;lua_action:&#34;</span>)
+<span style="color:#66d9ef">end</span>
+
+<span style="color:#66d9ef">local</span> eventClass <span style="color:#f92672">=</span> CS.EventClass()
+eventClass:Events(<span style="color:#e6db74">&#34;+&#34;</span>, lua_action)
+eventClass:Events(<span style="color:#e6db74">&#34;+&#34;</span>, eventClass.action1)
+eventClass:Events(<span style="color:#e6db74">&#34;+&#34;</span>, eventClass.action2)
+eventClass:TriggerEvent()</code></pre></div>
+<p>运行结果</p>
+
+<p><img src="https://BlauHimmel.github.io/img/post/xLua-note3-Lua-call-CSharp/img-9.png" alt="" /></p>
+
+<p>注意在Lua中不能通过以下方式来触发事件</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-lua" data-lang="lua">eventClass:Events()</code></pre></div>
+<p>因为Events此时只是一个记录事件委托链的Table，并不是一个函数</p>
+
+<h1 id="类型信息与泛型方法">类型信息与泛型方法</h1>
+
+<p>一个很简单的需求就是我们想要给新创建的GameObject添加某一个组件</p>
+
+<p>在C#中一般的做法是使用AddComponent函数</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cs" data-lang="cs"><span style="color:#a6e22e">gameObject</span>.AddComponent&lt;Rigidbody&gt;();
+<span style="color:#a6e22e">gameObject</span>.AddComponent(<span style="color:#e6db74">&#34;Rigidbody&#34;</span>);
+<span style="color:#a6e22e">gameObject</span>.AddComponent(<span style="color:#66d9ef">typeof</span>(Rigidbody));</code></pre></div>
+<p>AddComponent函数有三种重载形式，可以通过泛型、类名字符串和类的类型信息Type对象三种方式来为一个GameObject对象添加一个组件</p>
+
+<p>而xLua不支持泛型，如果想要调用只能通过定义扩展方法，然后在Lua中通过调用扩展方法的方式来进行间接地调用</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cs" data-lang="cs"><span style="color:#a6e22e">[LuaCallCSharp]</span>
+<span style="color:#66d9ef">static</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">ExtendedMethod</span>
+{
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> Rigidbody AddComponentRigidbody(<span style="color:#66d9ef">this</span> GameObject gameobject)
+    {
+        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">gameobject</span>.AddComponent&lt;Rigidbody&gt;();
+    }<span style="color:#a6e22e">
+</span><span style="color:#a6e22e">
+</span><span style="color:#a6e22e">    [LuaCallCSharp]</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> List&lt;Type&gt; luaCallCSharpList = <span style="color:#66d9ef">new</span> List&lt;Type&gt;()
+    {
+        <span style="color:#66d9ef">typeof</span>(GameObject),
+    };
+}</code></pre></div>
+<p>由于GameObject是Unity的API，不能修改其源代码，所以不能通过在其上添加 <strong>LuaCallCSharp</strong> ，所以这里使用了<a href="https://github.com/Tencent/xLua/blob/master/Assets/XLua/Doc/configure.md">另外一种方法</a></p>
+
+<blockquote>
+<h1 id="静态列表">静态列表</h1>
+
+<p>有时我们无法直接给一个类型打标签，比如系统api，没源码的库，或者实例化的泛化类型，这时你可以在一个静态类里声明一个静态字段，该字段的类型除BlackList和AdditionalProperties之外只要实现了IEnumerable<Type>就可以了(这两个例外后面具体会说)，然后为这字段加上标签：</p>
+</blockquote>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cs" data-lang="cs"><span style="color:#a6e22e">[LuaCallCSharp]</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> List&lt;Type&gt; mymodule_lua_call_cs_list = <span style="color:#66d9ef">new</span> List&lt;Type&gt;()
+{
+    <span style="color:#66d9ef">typeof</span>(GameObject),
+    <span style="color:#66d9ef">typeof</span>(Dictionary&lt;<span style="color:#66d9ef">string</span>, <span style="color:#66d9ef">int</span>&gt;),
+};</code></pre></div>
+<p>这样就能通过Lua代码间接调用AddComponent的泛型重载形式来添加Rigidbody组件</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-lua" data-lang="lua"><span style="color:#66d9ef">local</span> go <span style="color:#f92672">=</span> CS.UnityEngine.GameObject(<span style="color:#e6db74">&#34;SuperCube&#34;</span>)
+go:AddComponentRigidbody()</code></pre></div>
+<p>AddComponent的字符串重载形式则可以在Lua代码中直接调用</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-lua" data-lang="lua"><span style="color:#66d9ef">local</span> go <span style="color:#f92672">=</span> CS.UnityEngine.GameObject(<span style="color:#e6db74">&#34;SuperCube&#34;</span>)
+go:AddComponent(<span style="color:#e6db74">&#34;Animator&#34;</span>)</code></pre></div>
+<p>对于传入Type的第三种重载形式，xLua在Lua API中为我们提供了一个和C#中typeof函数一样的函数，在Lua代码中也可以通过typeof得到类的类型信息</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-lua" data-lang="lua"><span style="color:#66d9ef">local</span> go <span style="color:#f92672">=</span> CS.UnityEngine.GameObject(<span style="color:#e6db74">&#34;SuperCube&#34;</span>)
+go:AddComponent(typeof(CS.UnityEngine.Rigidbody))</code></pre></div>
+<h1 id="类型转换">类型转换</h1>
+
+<p>很多第三方库对外只暴露接口，而但我们通过Lua来调用的时候，这些没有对外暴露类只能够通过反射的方式来进行访问，如果这个接口被频繁地调用，势必会影响性能</p>
+
+<p>为了提高运行效率，可以使用之前提到的静态列表的方式，将第三方库对外暴露的接口加入到代码生成列表中，生成Lua适配代码，这样然后在Lua中把具体的实现类转换为接口，然后通过接口来调用C#代码</p>
+
+<p>下面举一个列子，假设某个第三方库是这样的</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cs" data-lang="cs"><span style="color:#a6e22e">[LuaCallCSharp]</span>
+<span style="color:#66d9ef">interface</span> IFuckable
+{
+    <span style="color:#66d9ef">void</span> Fuck();
+}<span style="color:#a6e22e">
+</span><span style="color:#a6e22e">
+</span><span style="color:#a6e22e">[LuaCallCSharp]</span>
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Lisa</span> : IFuckable
+{
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> id = <span style="color:#ae81ff">100</span>;
+
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> Fuck()
+    {
+        <span style="color:#a6e22e">Debug</span>.Log(<span style="color:#e6db74">&#34;Lisa[&#34;</span> + id + <span style="color:#e6db74">&#34;] Can Fuck!&#34;</span>);
+    }
+}
+
+<span style="color:#75715e">/*IFuckable的实现类很多*/</span><span style="color:#a6e22e">
+</span><span style="color:#a6e22e">
+</span><span style="color:#a6e22e">[LuaCallCSharp]</span>
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">WhoreHouse</span>
+{
+    <span style="color:#66d9ef">public</span> IFuckable GetWhore()
+    {
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> Lisa();
+    }
+}</code></pre></div>
+<p>其中IFuckable和WhoreHouse是该库对外暴露的接口，外部通过调用WhoreHouse的GetWhore方法来得到不同的实现了IFuckable接口的对象</p>
+
+<p>在Lua代码中，我们通过GetWhore拿到了一个woman对象，但是由于不知道woman到底是哪一个具体的实现类，所以直接调用的时候xLua会通过反射的方式来访问该实现类</p>
+
+<p>为了通过IFuckable接口来进行调用，需要在Lua中将得到的woman对象转换为IFuckable接口类型</p>
+
+<p>xLua为我们提供了一个类型转换函数 <strong>cast</strong> ，该函数有两个参数：
+1. 需要进行类型转换的对象
+2. 转换类型的Type对象(使用之前提到的<strong>typeof</strong>函数得到Type对象)</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-lua" data-lang="lua"><span style="color:#66d9ef">local</span> whorehouse <span style="color:#f92672">=</span> CS.WhoreHouse()
+<span style="color:#66d9ef">local</span> woman <span style="color:#f92672">=</span> whorehouse:GetWhore()
+woman:Fuck()
+cast(woman, typeof(CS.IFuckable))
+woman:Fuck()</code></pre></div>
+<p>从输出的结果中可以看出，转换后实现类独有的字段仍然id能够正确的输出</p>
+
+<p><img src="https://BlauHimmel.github.io/img/post/xLua-note3-Lua-call-CSharp/img-10.png" alt="" /></p></article>
+    <footer class="post-footer">
+      
+      <ul class="post-tags">
+        
+          <li><a href="https://BlauHimmel.github.io/tags/unity3d"><span class="tag">Unity3D</span></a></li>
+        
+          <li><a href="https://BlauHimmel.github.io/tags/lua"><span class="tag">Lua</span></a></li>
+        
+          <li><a href="https://BlauHimmel.github.io/tags/xlua"><span class="tag">XLua</span></a></li>
+        
+          <li><a href="https://BlauHimmel.github.io/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0"><span class="tag">学习笔记</span></a></li>
+        
+      </ul>
+      
+      <p class="post-copyright">
+        ©Copyright 2018
+      </p>
+    </footer>
+    
+      
+    
+  </section>
+  <footer class="site-footer">
+  <p>© 2017-2018 BlauHimmel&#39;s Blog</p>
+  <p>Powered by <a href="https://gohugo.io/" target="_blank">Hugo</a> with theme <a href="https://github.com/laozhu/hugo-nuo" target="_blank">Nuo</a>.</p>
+  
+</footer>
+
+
+
+<script async src="//cdn.bootcss.com/video.js/6.2.8/alt/video.novtt.min.js"></script>
+<script async src="//cdn.bootcss.com/mathjax/2.7.2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [['$','$'], ['\\(','\\)']],
+      displayMath: [['$$','$$'], ['\[','\]']],
+      processEscapes: true,
+      processEnvironments: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+      TeX: { equationNumbers: { autoNumber: "AMS" },
+      extensions: ["AMSmath.js", "AMSsymbols.js"] }
+    }
+  });
+</script>
+<script type="text/x-mathjax-config">
+  // Fix <code> tags after MathJax finishes running. This is a
+  // hack to overcome a shortcoming of Markdown. Discussion at
+  // https://github.com/mojombo/jekyll/issues/199
+  MathJax.Hub.Queue(() => {
+    MathJax.Hub.getAllJax().map(v => v.SourceElement().parentNode.className += ' has-jax');
+  });
+</script>
+
+<script src="https://BlauHimmel.github.io/js/bundle.js"></script>
+
+
+
+
+  </body>
+</html>
