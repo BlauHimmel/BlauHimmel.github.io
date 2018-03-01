@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <meta charset="utf-8" />
+
+  
+  <title>Polygon Mesh Processing 阅读笔记(2) 网格数据结构</title>
+
+  
+  
+
+
+
+
+
+  
+  <meta name="author" content="BlauHimmel" />
+  <meta name="description" content="
+" />
+
+  
+  
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:site" content="@zhouyuming1104" />
+    <meta name="twitter:title" content="Polygon Mesh Processing 阅读笔记(2) 网格数据结构" />
+    <meta name="twitter:description" content="
+" />
+    <meta name="twitter:image" content="https://BlauHimmel.github.io/img/avatar.jpg" />
+  
+
+  
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="Polygon Mesh Processing 阅读笔记(2) 网格数据结构" />
+  <meta property="og:description" content="
+" />
+  <meta property="og:url" content="https://BlauHimmel.github.io/post/polygon-mesh-processing-note2-structure/" />
+  <meta property="og:image" content="https://BlauHimmel.github.io/img/avatar.jpg" />
+
+
+
+
+<meta name="generator" content="Hugo 0.37" />
+
+
+<link rel="canonical" href="https://BlauHimmel.github.io/post/polygon-mesh-processing-note2-structure/" />
+<link rel="alternative" href="https://BlauHimmel.github.io/index.xml" title="BlauHimmel&#39;s Blog" type="application/atom+xml" />
+
+
+<meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta name="format-detection" content="telephone=no,email=no,adress=no" />
+<meta http-equiv="Cache-Control" content="no-transform" />
+
+
+<meta name="robots" content="index,follow" />
+<meta name="referrer" content="origin-when-cross-origin" />
+
+
+
+
+
+
+
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="BlauHimmel&#39;s Blog" />
+<meta name="msapplication-tooltip" content="BlauHimmel&#39;s Blog" />
+<meta name='msapplication-navbutton-color' content="#5fbf5e" />
+<meta name="msapplication-TileColor" content="#5fbf5e" />
+<meta name="msapplication-TileImage" content="/img/tile-image-windows.png" />
+<link rel="icon" href="https://BlauHimmel.github.io/img/favicon.ico" />
+<link rel="icon" type="image/png" sizes="16x16" href="https://BlauHimmel.github.io/img/favicon-16x16.png" />
+<link rel="icon" type="image/png" sizes="32x32" href="https://BlauHimmel.github.io/img/favicon-32x32.png" />
+<link rel="icon" sizes="192x192" href="https://BlauHimmel.github.io/img/touch-icon-android.png" />
+<link rel="apple-touch-icon" href="https://BlauHimmel.github.io/img/touch-icon-apple.png" />
+<link rel="mask-icon" href="https://BlauHimmel.github.io/img/safari-pinned-tab.svg" color="#5fbf5e" />
+
+
+
+<link rel="stylesheet" href="//cdn.bootcss.com/video.js/6.2.8/alt/video-js-cdn.min.css" />
+
+<link rel="stylesheet" href="https://BlauHimmel.github.io/css/bundle.css" />
+
+
+  
+  <!--[if lt IE 9]>
+    <script src="//cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="//cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <script src="//cdn.bootcss.com/video.js/6.2.8/ie8/videojs-ie8.min.js"></script>
+  <![endif]-->
+
+<!--[if lte IE 11]>
+    <script src="//cdn.bootcss.com/classlist/1.1.20170427/classList.min.js"></script>
+  <![endif]-->
+
+
+<script src="//cdn.bootcss.com/object-fit-images/3.2.3/ofi.min.js"></script>
+
+
+<script src="//cdn.bootcss.com/smooth-scroll/12.1.4/js/smooth-scroll.polyfills.min.js"></script>
+
+
+</head>
+  <body>
+    
+    <div class="suspension">
+      <a title="Go to top" class="to-top is-hide"><span class="icon icon-up"></span></a>
+      
+        
+      
+    </div>
+    
+    
+  <header class="site-header">
+  <img class="avatar" src="https://BlauHimmel.github.io/img/avatar.png" alt="Avatar">
+  
+  <h2 class="title">BlauHimmel&#39;s Blog</h2>
+  
+  <p class="subtitle">A lazy programmer who is interested in game developing and computer graphic...</p>
+  <button class="menu-toggle" type="button">
+    <span class="icon icon-menu"></span>
+  </button>
+  <nav class="site-menu collapsed">
+    <h2 class="offscreen">Main Menu</h2>
+    <ul class="menu-list">
+      
+      
+      
+      
+        <li class="menu-item
+            
+            
+            
+              is-active
+            ">
+            <a href="https://BlauHimmel.github.io/">Home</a>
+          </li>
+      
+        <li class="menu-item
+            
+            
+            ">
+            <a href="https://BlauHimmel.github.io/tags/">Tags</a>
+          </li>
+      
+        <li class="menu-item
+            
+            
+            ">
+            <a href="https://BlauHimmel.github.io/about/">About</a>
+          </li>
+      
+    </ul>
+  </nav>
+  <nav class="social-menu collapsed">
+    <h2 class="offscreen">Social Networks</h2>
+    <ul class="social-list">
+
+      
+      <li class="social-item">
+        <a href="mailto:zhouyuming1104@qq.com" title="Email"><span class="icon icon-email"></span></a>
+      </li>
+
+      
+      <li class="social-item">
+        <a href="//github.com/BlauHimmel" title="GitHub"><span class="icon icon-github"></span></a>
+      </li>
+
+      <li class="social-item">
+        <a href="//twitter.com/zhouyuming1104" title="Twitter"><span class="icon icon-twitter"></span></a>
+      </li>
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <li class="social-item">
+        <a href="https://BlauHimmel.github.io/index.xml"><span class="icon icon-rss" title="RSS"></span></a>
+      </li>
+
+    </ul>
+  </nav>
+</header>
+
+  <section class="main post-detail">
+    <header class="post-header">
+      <h1 class="post-title">Polygon Mesh Processing 阅读笔记(2) 网格数据结构</h1>
+      <p class="post-meta">@BlauHimmel · Feb 28, 2018 · 1 min read</p>
+    </header>
+    <article class="post-content"><p></p>
+
+<p>选择网格数据结构的时候一般考虑下面两个因素：</p>
+
+<ol>
+<li><p><strong>拓扑需求(Topological Requirements)</strong> ：需要表示什么样的网格？是二维流形，还是其它更复杂的网格？是单纯的三角形网格，或者其它任意的多边形网格？是需要给当前的网格附加上其它的网格？</p></li>
+
+<li><p><strong>算法需求(Algorithmic Requirements)</strong>：使用什么样的算法？是简单的渲染还是需要频繁的访问相邻的点边面？是静态网格还是动态网格？对于网格是否需要附加一些其它的属性？对内存的消耗是否特别在意？</p></li>
+</ol>
+
+<p>评估一个数据结构的好坏有下面几个标准：</p>
+
+<ol>
+<li>建立数据结构所需要预处理的时间</li>
+<li>查询操作的响应时间</li>
+<li>执行某项具体操作的时间</li>
+<li>内存消耗和冗余</li>
+</ol>
+
+<h2 id="faced-based-data-structures">Faced-Based Data Structures</h2>
+
+<p>这种数据结构最直观的优点是简单，这种数据结构由网格所有面的集合构成，而对于每一个面则使用组成面多边形的的点来表示。</p>
+
+<p><img src="https://BlauHimmel.github.io/img/post/Polygon-Mesh-Processing-note2-Structure/img-0.jpeg" alt="" /></p>
+
+<p>以三角形网格为例，假设使用32位的单精度浮点数来表示坐标则，那么使用顶点的数据来表示一个三角形则需要36个字节(3 vertex * 3 dimension * 4 byte = 36 byte)。</p>
+
+<p>通过上一部分的学习可以知道顶点的邻边的平均数量为6，即在这种数据结构中一个顶点平均会被存储6次，所以可以估算使用这种数据结构平均每一个顶点要使用72个字节(3 dimension * 4 byte * 6 time = 72 byte)</p>
+
+<p>可以发现，一个顶点的数据被多次存储，一种可以改进这种空间冗余的方法是，使用数组来存储所有的顶点数据，而对于每一个三角形面只需要存储组成其的三个顶点的索引号即可。</p>
+
+<p><img src="https://BlauHimmel.github.io/img/post/Polygon-Mesh-Processing-note2-Structure/img-1.jpeg" alt="" /></p>
+
+<p>这样存储一个三角形或一个顶点只需要12个字节(3个4字节的浮点数或3个整数)</p>
+
+<p>这样平均一个顶点只需要36个字节(3 dimension * 4 byte + 6 time * 4 byte = 36 byte，一份顶点数据，6个索引号)</p>
+
+<p>但是这种数据结构存在一个问题，它缺陷显式的连通性信息，在大多数算法中都会用到下面的操作：</p>
+
+<ul>
+<li>迭代访问所有的点、边和面</li>
+<li>有方向地遍历一个面周围的边，这需要通过一条边找到它的下一条或者上一条边，可能还需要顺带的使用到对应顶点的数据</li>
+<li>通过一条边找到与它相邻的面或者它的两个端点</li>
+<li>通过一个顶点迭代访问它周围的边和面(<em>one-ring neighborhood</em>)</li>
+</ul>
+
+<p>要通过上面的数据结构完成这些操作，可以把向当前的数据结构中添加一部分信息。</p>
+
+<p><img src="https://BlauHimmel.github.io/img/post/Polygon-Mesh-Processing-note2-Structure/img-2.jpeg" alt="" /></p>
+
+<p>添加了附加信息后，存储一个面需要24个字节，存储一个顶点需要16个字节，平均一个顶点需要64个字节。</p>
+
+<h2 id="edge-based-data-structures">Edge-Based Data Structures</h2>
+
+<p>这种数据结构改进Faced-Based Data Structures中没有显式存储边地问题，并附加存储了很多其它信息到边上(两个端点、相邻地面、边)。</p>
+
+<p><img src="https://BlauHimmel.github.io/img/post/Polygon-Mesh-Processing-note2-Structure/img-3.jpeg" alt="" /></p>
+
+<p>这种数据结构存储一个面需要4个字节，存储一个顶点需要16个字节，存储一条边需要32个字节，平均一个顶点需要120个字节。</p>
+
+<h2 id="halfedge-based-data-structure">Halfedge-Based Data Structure</h2>
+
+<p>在Halfedge-Based Data Structure(半边数据结构)中，一个重要的概念就是Halfedge(半边)，半边即一条边的一半，等于是把一条边保持长度不变，形式上分为两条半边。这两条半边组合在一起称为一条边，也就是一条边等于一对半边。半边是有方向的，并且一条边的一对半边有相反的方向。</p>
+
+<p><img src="https://BlauHimmel.github.io/img/post/Polygon-Mesh-Processing-note2-Structure/img-4.jpeg" alt="" /></p>
+
+<p>对于每一条半边，我们存储下面的信息：</p>
+
+<ol>
+<li>半边指向的顶点</li>
+<li>半边相邻的面(当半边为网格边界的时候没有相邻的面)</li>
+<li>一个面中的上/下一条半边</li>
+<li>与它配对的另一条半边</li>
+</ol>
+
+<p><img src="https://BlauHimmel.github.io/img/post/Polygon-Mesh-Processing-note2-Structure/img-5.jpeg" alt="" /></p>
+
+<p>存储一个面需要4个字节，存储一个顶点需要16个字节，存储一条半边需要20个字节，平均一个顶点需要144个字节。</p>
+
+<p>这里可以优化使用数组的索引号而不是指针来存储具体的信息，这样在需要附加额外信息的时候会更加方便，同时由于数组在内存中是连续排布的，在进行内存管理的时候也会更加简单高效。</p>
+
+<h2 id="directed-edge-data-structure">Directed-Edge Data Structure</h2>
+
+<p>这种数据结构是Halfedge-Based Data Structure(半边数据结构)的一种特殊形式，只能够用于三角形网格。这种数据结构将连通性信息隐藏在了数组索引号的关系中。</p>
+
+<p>假设 <em>f</em> 是面的索引号，那么这个面3条半边的索引号分别为：</p>
+
+<p><img src="https://BlauHimmel.github.io/img/post/Polygon-Mesh-Processing-note2-Structure/img-6.jpeg" alt="" /></p>
+
+<p>假设 <em>h</em> 为半边的索引，那么其相邻面的索引以及该半边在该面中的索引号为：</p>
+
+<p><img src="https://BlauHimmel.github.io/img/post/Polygon-Mesh-Processing-note2-Structure/img-7.jpeg" alt="" /></p>
+
+<p>假设要求该半边指向的下一个半边的索引号，那么只需要计算$(h + 1) \mod{3}$即可。</p>
+
+<p>每一个顶点存储其位置信息和从该点射出的半边的索引号；每一个半边存储与其配对的另一条反向的半边以及该半边对应的顶点(射出该半边的)的索引号。</p>
+
+<p>这样存储一个顶点需要16个字节，存储一条半边需要8个字节，平均一个顶点需要64个字节。</p>
+
+<p>该数据结构在网格的边界部分需要特殊处理索引号。另外该数据结构只能单纯的表示某种类型的网格，例如三角形网格或者四边形网格，而不能表示混合了三角形和四边形的网格。</p></article>
+    <footer class="post-footer">
+      
+      <ul class="post-tags">
+        
+          <li><a href="https://BlauHimmel.github.io/tags/mesh"><span class="tag">Mesh</span></a></li>
+        
+          <li><a href="https://BlauHimmel.github.io/tags/%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0"><span class="tag">阅读笔记</span></a></li>
+        
+      </ul>
+      
+      <p class="post-copyright">
+        ©Copyright 2018
+      </p>
+    </footer>
+    
+      
+    
+  </section>
+  <footer class="site-footer">
+  <p>© 2017-2018 BlauHimmel&#39;s Blog</p>
+  <p>Powered by <a href="https://gohugo.io/" target="_blank">Hugo</a> with theme <a href="https://github.com/laozhu/hugo-nuo" target="_blank">Nuo</a>.</p>
+  
+</footer>
+
+
+
+<script async src="//cdn.bootcss.com/video.js/6.2.8/alt/video.novtt.min.js"></script>
+<script async src="//cdn.bootcss.com/mathjax/2.7.2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [['$','$'], ['\\(','\\)']],
+      displayMath: [['$$','$$'], ['\[','\]']],
+      processEscapes: true,
+      processEnvironments: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+      TeX: { equationNumbers: { autoNumber: "AMS" },
+      extensions: ["AMSmath.js", "AMSsymbols.js"] }
+    }
+  });
+</script>
+<script type="text/x-mathjax-config">
+  // Fix <code> tags after MathJax finishes running. This is a
+  // hack to overcome a shortcoming of Markdown. Discussion at
+  // https://github.com/mojombo/jekyll/issues/199
+  MathJax.Hub.Queue(() => {
+    MathJax.Hub.getAllJax().map(v => v.SourceElement().parentNode.className += ' has-jax');
+  });
+</script>
+
+<script src="https://BlauHimmel.github.io/js/bundle.js"></script>
+
+
+
+
+  </body>
+</html>
