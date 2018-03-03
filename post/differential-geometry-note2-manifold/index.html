@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <meta charset="utf-8" />
+
+  
+  <title>微分几何 学习笔记(2) 流形</title>
+
+  
+  
+
+
+
+
+
+  
+  <meta name="author" content="BlauHimmel" />
+  <meta name="description" content="
+" />
+
+  
+  
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:site" content="@zhouyuming1104" />
+    <meta name="twitter:title" content="微分几何 学习笔记(2) 流形" />
+    <meta name="twitter:description" content="
+" />
+    <meta name="twitter:image" content="https://BlauHimmel.github.io/img/avatar.jpg" />
+  
+
+  
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="微分几何 学习笔记(2) 流形" />
+  <meta property="og:description" content="
+" />
+  <meta property="og:url" content="https://BlauHimmel.github.io/post/differential-geometry-note2-manifold/" />
+  <meta property="og:image" content="https://BlauHimmel.github.io/img/avatar.jpg" />
+
+
+
+
+<meta name="generator" content="Hugo 0.37" />
+
+
+<link rel="canonical" href="https://BlauHimmel.github.io/post/differential-geometry-note2-manifold/" />
+<link rel="alternative" href="https://BlauHimmel.github.io/index.xml" title="BlauHimmel&#39;s Blog" type="application/atom+xml" />
+
+
+<meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta name="format-detection" content="telephone=no,email=no,adress=no" />
+<meta http-equiv="Cache-Control" content="no-transform" />
+
+
+<meta name="robots" content="index,follow" />
+<meta name="referrer" content="origin-when-cross-origin" />
+
+
+
+
+
+
+
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="BlauHimmel&#39;s Blog" />
+<meta name="msapplication-tooltip" content="BlauHimmel&#39;s Blog" />
+<meta name='msapplication-navbutton-color' content="#5fbf5e" />
+<meta name="msapplication-TileColor" content="#5fbf5e" />
+<meta name="msapplication-TileImage" content="/img/tile-image-windows.png" />
+<link rel="icon" href="https://BlauHimmel.github.io/img/favicon.ico" />
+<link rel="icon" type="image/png" sizes="16x16" href="https://BlauHimmel.github.io/img/favicon-16x16.png" />
+<link rel="icon" type="image/png" sizes="32x32" href="https://BlauHimmel.github.io/img/favicon-32x32.png" />
+<link rel="icon" sizes="192x192" href="https://BlauHimmel.github.io/img/touch-icon-android.png" />
+<link rel="apple-touch-icon" href="https://BlauHimmel.github.io/img/touch-icon-apple.png" />
+<link rel="mask-icon" href="https://BlauHimmel.github.io/img/safari-pinned-tab.svg" color="#5fbf5e" />
+
+
+
+<link rel="stylesheet" href="//cdn.bootcss.com/video.js/6.2.8/alt/video-js-cdn.min.css" />
+
+<link rel="stylesheet" href="https://BlauHimmel.github.io/css/bundle.css" />
+
+
+  
+  <!--[if lt IE 9]>
+    <script src="//cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="//cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <script src="//cdn.bootcss.com/video.js/6.2.8/ie8/videojs-ie8.min.js"></script>
+  <![endif]-->
+
+<!--[if lte IE 11]>
+    <script src="//cdn.bootcss.com/classlist/1.1.20170427/classList.min.js"></script>
+  <![endif]-->
+
+
+<script src="//cdn.bootcss.com/object-fit-images/3.2.3/ofi.min.js"></script>
+
+
+<script src="//cdn.bootcss.com/smooth-scroll/12.1.4/js/smooth-scroll.polyfills.min.js"></script>
+
+
+</head>
+  <body>
+    
+    <div class="suspension">
+      <a title="Go to top" class="to-top is-hide"><span class="icon icon-up"></span></a>
+      
+        
+      
+    </div>
+    
+    
+  <header class="site-header">
+  <img class="avatar" src="https://BlauHimmel.github.io/img/avatar.png" alt="Avatar">
+  
+  <h2 class="title">BlauHimmel&#39;s Blog</h2>
+  
+  <p class="subtitle">A lazy programmer who is interested in game developing and computer graphic...</p>
+  <button class="menu-toggle" type="button">
+    <span class="icon icon-menu"></span>
+  </button>
+  <nav class="site-menu collapsed">
+    <h2 class="offscreen">Main Menu</h2>
+    <ul class="menu-list">
+      
+      
+      
+      
+        <li class="menu-item
+            
+            
+            
+              is-active
+            ">
+            <a href="https://BlauHimmel.github.io/">Home</a>
+          </li>
+      
+        <li class="menu-item
+            
+            
+            ">
+            <a href="https://BlauHimmel.github.io/tags/">Tags</a>
+          </li>
+      
+        <li class="menu-item
+            
+            
+            ">
+            <a href="https://BlauHimmel.github.io/about/">About</a>
+          </li>
+      
+    </ul>
+  </nav>
+  <nav class="social-menu collapsed">
+    <h2 class="offscreen">Social Networks</h2>
+    <ul class="social-list">
+
+      
+      <li class="social-item">
+        <a href="mailto:zhouyuming1104@qq.com" title="Email"><span class="icon icon-email"></span></a>
+      </li>
+
+      
+      <li class="social-item">
+        <a href="//github.com/BlauHimmel" title="GitHub"><span class="icon icon-github"></span></a>
+      </li>
+
+      <li class="social-item">
+        <a href="//twitter.com/zhouyuming1104" title="Twitter"><span class="icon icon-twitter"></span></a>
+      </li>
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <li class="social-item">
+        <a href="https://BlauHimmel.github.io/index.xml"><span class="icon icon-rss" title="RSS"></span></a>
+      </li>
+
+    </ul>
+  </nav>
+</header>
+
+  <section class="main post-detail">
+    <header class="post-header">
+      <h1 class="post-title">微分几何 学习笔记(2) 流形</h1>
+      <p class="post-meta">@BlauHimmel · Mar 3, 2018 · 1 min read</p>
+    </header>
+    <article class="post-content"><p></p>
+
+<h2 id="复合映射">复合映射</h2>
+
+<p>对于$X$，$Y$和$Z$三个集合，存在映射$f$，$g$和$h$</p>
+
+<p><img src="https://BlauHimmel.github.io/img/post/differential-geometry-note2-manifold/img-0.png" alt="" /></p>
+
+<p>其中$h$可以表示为先$f$后$g$的复合映射，所以复合映射$h$可以表示为下面的形式，注意书写的顺序和映射复合的顺序相反。</p>
+
+<p><img src="https://BlauHimmel.github.io/img/post/differential-geometry-note2-manifold/img-1.png" alt="" /></p>
+
+<h2 id="流形-manifold">流形(Manifold)</h2>
+
+<p>粗略的说，一个 <strong>拓扑空间(Topological Space)</strong> 再加上一个 <strong>微分结构(Differentiable structure)</strong> ，称为 <strong>流形(Manifold)</strong> 。</p>
+
+<blockquote>
+<p><strong>开覆盖(Open Cover)</strong>
+假定有一个拓扑空间M，存在一个由$M$上的若干开集(Open Set)组成的集合
+<img src="https://BlauHimmel.github.io/img/post/differential-geometry-note2-manifold/img-2.png" alt="" />
+如果下式成立，则说上面这个是$M$的一个 <strong>开覆盖(Open Cover)</strong>
+<img src="https://BlauHimmel.github.io/img/post/differential-geometry-note2-manifold/img-3.png" alt="" /></p>
+</blockquote>
+
+<p>如果$M$上存在一个开覆盖，并且满足下面两个条件，则称$M$为一个 <strong>n维</strong> 的 <strong>流形(Manifold)</strong> 。</p>
+
+<ul>
+<li><p>对于这个开覆盖中的任意一个开集$O_{\alpha}$，存在一个从$O_{\alpha}$到拓扑空间$\mathbf{R}_n$上的某个开子集的同胚映射。(注意：$\mathbf{R}_n$的拓扑结构在没有特殊声明的时候取 <em>通常拓扑(Usual topology)</em> ，即可表示为开球之并的子集的集合)
+<img src="https://BlauHimmel.github.io/img/post/differential-geometry-note2-manifold/img-4.png" alt="" /></p></li>
+
+<li><p>对于开集$O_{\alpha}$和开集$O_{\beta}$，如果它们的交集不为空，则从$V_{\alpha}$到$V_{\beta}$上的复合映射的无限阶连续(任意阶导函数存在且连续)。
+<img src="https://BlauHimmel.github.io/img/post/differential-geometry-note2-manifold/img-5.png" alt="" /></p></li>
+</ul>
+
+<p><strong>流形(Manifold)</strong> 的维数是由映射$\Psi$决定的，$\Psi$将一个开集映射到一个几维的空间上，流形的维数就是几。</p>
+
+<p>对于条件二，需要特别注意这个条件中映射的原像和像的范围。
+<img src="https://BlauHimmel.github.io/img/post/differential-geometry-note2-manifold/img-6.png" alt="" /></p>
+
+<p>第一个条件使得一个n维的 <strong>流形(Manifold)</strong> 的 <strong>局部</strong> 上看起来像一个$\mathbf{R}_n$。</p>
+
+<p>第二个条件保证了不同的开集之间的相容性，又叫做 <strong>相容性条件(Compatibility condition)</strong> 。</p>
+
+<h2 id="图-坐标系-图册-chart-coordinate-system-atlas">图/坐标系&amp;图册(Chart/Coordinate System&amp; Atlas)</h2>
+
+<p>对于$M$上的某个点，通过$\Psi$映射得到了$\mathbf{R}_n$上的一组数$(x_1,&hellip;,x_n)$，这一组数称作这个点在$\Psi$映射下对应的自然坐标。</p>
+
+<p><img src="https://BlauHimmel.github.io/img/post/differential-geometry-note2-manifold/img-6.png" alt="" /></p>
+
+<p>对于$M$中红色区域中的点，在$\Psi_\alpha$和$\Psi_\beta$的映射下得到了$(x_1,&hellip;,x_n)$，$(x&rsquo;_1,&hellip;,x&rsquo;_n)$ 两个不同的自然坐标，而这两个不同的自然坐标可以通过之前提到的复合映射进行变换，这就是所谓的 <strong>坐标变换(Coordinate transformation)</strong>。</p>
+
+<p>一般将流型上的某个开集$O$和其对应的映射$\Psi$称作一个 <strong>坐标系(Coordinate system)</strong> ，或者 <strong>图(Chart)</strong>，记作$(O, \Psi)$。</p>
+
+<p>若干 <strong>图(Chart)</strong> 的集合称做 <strong>图册(Atlas)</strong> ，记作$\{(O_1, \Psi_1),&hellip;,(O_n, \Psi_n)\}$。</p>
+
+<h2 id="例子">例子</h2>
+
+<blockquote>
+<p>给定$\mathbf{R}_2$上的一个拓扑空间$M=\mathbf{R}_2$</p>
+
+<ol>
+<li>寻找一个最简单的开覆盖：$O_1=\mathbf{R}_2$。</li>
+<li>寻找一个最简单的同胚映射：$\Psi_1:\mathbf{R}_2 \rightarrow \mathbf{R}_2$（恒等映射）</li>
+</ol>
+
+<p>则M是一个2维流形，其图册为$\{(O_1, \Psi_1)\}$。</p>
+</blockquote>
+
+<p>可以发现在上面的例子中，$O_1$在映射$\Psi_1$下的坐标就是普通的直角坐标。</p>
+
+<p>通过在开覆盖中给定其它满足条件的同胚映射，可以得到不同的<strong>坐标系(Coordinate system)</strong>或者<strong>图(Chart)</strong>。如果要使用极坐标来表示2维流型上的某个点，只需要按照上面说的找到其相应的映射即可。</p>
+
+<blockquote>
+<p>给定$\mathbf{R}_2$上的一个拓扑空间$S$
+<img src="https://BlauHimmel.github.io/img/post/differential-geometry-note2-manifold/img-8.png" alt="" />
+可以按照下面的方式划分不同的<strong>坐标系(Coordinate system)</strong>或<strong>图(Chart)</strong>
+<img src="https://BlauHimmel.github.io/img/post/differential-geometry-note2-manifold/img-9.png" alt="" />
+由于图中四个相交的部分都等效，可以取其中一个加以证明，如黄色和绿色相交的地方。</p>
+
+<p>黄色区域的点在该坐标系下的坐标的值为该点在$\mathbf{R}_2$下自然坐标的横坐标，即$x$，同理绿色区域的点在其坐标系下的坐标为$y$。</p>
+
+<p>对于一个从黄色区域对应的坐标系到绿色区域的坐标变换，其表达式为<img src="https://BlauHimmel.github.io/img/post/differential-geometry-note2-manifold/img-10.png" alt="" />
+显然上式无限阶连续(任意阶导函数存在且连续)</p>
+
+<p>则$M$是一个1维流形，其图册为$\{(O_1, \Psi_1),(O_2, \Psi_2),(O_3, \Psi_3),(O_4, \Psi_4)\}$。</p>
+</blockquote>
+
+<h2 id="图册-atlas">图册(Atlas)</h2>
+
+<p>对于一个拓扑空间M，定义了两个不同的图册$\{(O_1, \Psi_1)\}$和$\{(O_2, \Psi_2)\}$</p>
+
+<p>当这两个图册不相容($O_1$和$O_2$的交集不为空，并且从$O_1$到$O_2$的复合映射不是无限阶连续)，这个时候就在同一个拓扑空间上定义了两个不同流形。</p>
+
+<p>一开始谈流形的时候说过：一个拓扑空间再加上一个微分结构，称为流形。那么对于这两个流形，它们的拓扑结构是相同，不同的是它们微分结构。</p>
+
+<p>而当这两个图册相容的时候，可以把这两个图册合并为一个更大的图册$\{(O_1, \Psi_1),(O_2, \Psi_2)\}$，这样3个图册定义出来流形的是一样的。为了方便，一般定义一个流形都取最大的图册。</p>
+
+<h2 id="流形间映射">流形间映射</h2>
+
+<p>假定存在一个从流形$M$到流形$M’$上的映射$f$，根据流形的定义，分别选定它们开覆盖上的开集$O$和$O&rsquo;$，且它们分别存在从自身到对应维度的拓扑空间$\mathbf{R}_n$和$\mathbf{R&rsquo;}_n$上的某个开子集的同胚映射，如下图所示</p>
+
+<p><img src="https://BlauHimmel.github.io/img/post/differential-geometry-note2-manifold/img-11.png" alt="" /></p>
+
+<p>观察图中的映射关系，可以发现映射$f$是$\Psi$、$g$和$\Psi&rsquo;$逆映射的复合，根据流形的定义可以知道$\Psi$和$\Psi&rsquo;$为同胚映射，所以要看映射$f$的连续性，只需要看映射$g$的连续性，如果$g$是无限阶连续的，则$f$也是无限阶连续的。</p>
+
+<p>之前提到，两个拓扑空间的映射如果是One to one和onto，并且正反映射都是$C^0$连续的，则称它们是同胚的。</p>
+
+<p>同样地，两个流形之间的映射如果是One to one和onto，并且正反映射都是无限阶连续的，则称它们是 <strong>微分同胚(Diffeomorphism)</strong> 的。</p>
+
+<h2 id="标量场-函数-scaler-field-function">标量场 &amp; 函数(Scaler Field &amp; Function)</h2>
+
+<p>假定存在一个从流形$M$到实数域$R$上的映射$f$，则称映射$f$为一个 <strong>函数(Function)</strong> 或者 <strong>标量场(Scaler field)</strong> 。</p>
+
+<p>需要特别注意，这里的 <strong>函数</strong> 和我们之前学的函数是 <strong>不一样</strong> 的。</p>
+
+<p>以前我们考虑一个n元函数需要给定一个n元的自变量，换句话说就是要给定一个坐标，而对于流形$M$上的同一个点，由于给定的 <strong>坐标系</strong> 或 <strong>图</strong> 不同，得到的坐标也不同。不同的坐标通过函数得到的函数值相同，所以这几个函数的函数关系也不同。</p>
+
+<p>所以，对于之前理解的函数，他是依赖于 <strong>坐标系</strong> 或 <strong>图</strong> ，它是 <strong>相对的</strong> 。而这里的我们所提到的 <strong>函数</strong> 是不依赖于具体坐标系，它是 <strong>绝对的</strong> 。</p>
+
+<p>所以为了防止混淆，把这个从流形$M$到实数域$R$上的映射$f$称作 <strong>标量场</strong> 更加合适。</p>
+
+<h2 id="开子集-闭子集">开子集&amp;闭子集</h2>
+
+<p>如果一个子集是 <strong>开子集(Open Subset)</strong> ，那么它的补集就是 <strong>闭子集(Closed Subset)</strong> 。</p>
+
+<p>一个集既可以是开的，也可以是闭的，还能是不开不闭和即开又闭的。</p>
+
+<blockquote>
+<p>全集是开子集，全集的补集是空子集，所以空集是闭子集，而空集又是开子集，所以空集即开又闭，反之同理可以得到全集也是既开又闭的。</p>
+</blockquote>
+
+<h2 id="连通性-connectivity">连通性(Connectivity)</h2>
+
+<p>如果一个 <strong>拓扑空间</strong> 的既开又闭的子集只有两个，则称它是 <strong>连通的(Connected)</strong> 。</p>
+
+<p>还有一个和上面连通性定义比较像的定义：对于一个 <strong>拓扑空间</strong> 内的任意两点，如果它们都能够被处于该 <strong>拓扑空间</strong> 内部的一条曲线连接，则称它是 <strong>弧连通</strong> 。</p>
+
+<p>这两个定义本身是有一定区别的，不过在 <strong>研究流形的时候</strong> 它们是没有区别的。</p></article>
+    <footer class="post-footer">
+      
+      <ul class="post-tags">
+        
+          <li><a href="https://BlauHimmel.github.io/tags/%E5%BE%AE%E5%88%86%E5%87%A0%E4%BD%95"><span class="tag">微分几何</span></a></li>
+        
+          <li><a href="https://BlauHimmel.github.io/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0"><span class="tag">学习笔记</span></a></li>
+        
+      </ul>
+      
+      <p class="post-copyright">
+        ©Copyright 2018
+      </p>
+    </footer>
+    
+      
+    
+  </section>
+  <footer class="site-footer">
+  <p>© 2017-2018 BlauHimmel&#39;s Blog</p>
+  <p>Powered by <a href="https://gohugo.io/" target="_blank">Hugo</a> with theme <a href="https://github.com/laozhu/hugo-nuo" target="_blank">Nuo</a>.</p>
+  
+</footer>
+
+
+
+<script async src="//cdn.bootcss.com/video.js/6.2.8/alt/video.novtt.min.js"></script>
+<script async src="//cdn.bootcss.com/mathjax/2.7.2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [['$','$'], ['\\(','\\)']],
+      displayMath: [['$$','$$'], ['\[','\]']],
+      processEscapes: true,
+      processEnvironments: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+      TeX: { equationNumbers: { autoNumber: "AMS" },
+      extensions: ["AMSmath.js", "AMSsymbols.js"] }
+    }
+  });
+</script>
+<script type="text/x-mathjax-config">
+  // Fix <code> tags after MathJax finishes running. This is a
+  // hack to overcome a shortcoming of Markdown. Discussion at
+  // https://github.com/mojombo/jekyll/issues/199
+  MathJax.Hub.Queue(() => {
+    MathJax.Hub.getAllJax().map(v => v.SourceElement().parentNode.className += ' has-jax');
+  });
+</script>
+
+<script src="https://BlauHimmel.github.io/js/bundle.js"></script>
+
+
+
+
+  </body>
+</html>

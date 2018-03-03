@@ -5,9 +5,7 @@
   <meta charset="utf-8" />
 
   
-  <title>
-  Tags | BlauHimmel&#39;s Blog
-</title>
+  <title>微分几何 学习笔记(1) 拓扑和同胚</title>
 
   
   
@@ -18,20 +16,25 @@
 
   
   <meta name="author" content="BlauHimmel" />
-  <meta name="description" content="" />
+  <meta name="description" content="
+" />
 
   
-  <meta name="twitter:card" content="summary" />
-  <meta name="twitter:site" content="@zhouyuming1104" />
-  <meta name="twitter:title" content="BlauHimmel&#39;s Blog" />
-  <meta name="twitter:description" content="" />
-  <meta name="twitter:image" content="https://BlauHimmel.github.io/img/avatar.jpg" />
+  
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:site" content="@zhouyuming1104" />
+    <meta name="twitter:title" content="微分几何 学习笔记(1) 拓扑和同胚" />
+    <meta name="twitter:description" content="
+" />
+    <meta name="twitter:image" content="https://BlauHimmel.github.io/img/avatar.jpg" />
+  
 
   
-  <meta property="og:type" content="website" />
-  <meta property="og:title" content="BlauHimmel&#39;s Blog" />
-  <meta property="og:description" content="" />
-  <meta property="og:url" content="https://BlauHimmel.github.io/tags/" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="微分几何 学习笔记(1) 拓扑和同胚" />
+  <meta property="og:description" content="
+" />
+  <meta property="og:url" content="https://BlauHimmel.github.io/post/differential-geometry-note1-topology-and-homeomorphism/" />
   <meta property="og:image" content="https://BlauHimmel.github.io/img/avatar.jpg" />
 
 
@@ -40,7 +43,7 @@
 <meta name="generator" content="Hugo 0.37" />
 
 
-<link rel="canonical" href="https://BlauHimmel.github.io/tags/" />
+<link rel="canonical" href="https://BlauHimmel.github.io/post/differential-geometry-note1-topology-and-homeomorphism/" />
 <link rel="alternative" href="https://BlauHimmel.github.io/index.xml" title="BlauHimmel&#39;s Blog" type="application/atom+xml" />
 
 
@@ -104,6 +107,8 @@
     <div class="suspension">
       <a title="Go to top" class="to-top is-hide"><span class="icon icon-up"></span></a>
       
+        
+      
     </div>
     
     
@@ -126,13 +131,13 @@
         <li class="menu-item
             
             
+            
+              is-active
             ">
             <a href="https://BlauHimmel.github.io/">Home</a>
           </li>
       
         <li class="menu-item
-            
-              is-active
             
             
             ">
@@ -210,35 +215,67 @@
   </nav>
 </header>
 
-  <section class="main post-detail terms-list">
+  <section class="main post-detail">
     <header class="post-header">
-      <h1 class="post-title">Tags</h1>
+      <h1 class="post-title">微分几何 学习笔记(1) 拓扑和同胚</h1>
+      <p class="post-meta">@BlauHimmel · Mar 3, 2018 · 1 min read</p>
     </header>
-    <div class="tags-cloud">
+    <article class="post-content"><p></p>
+
+<h2 id="拓扑-topology">拓扑(Topology)</h2>
+
+<p>不准确地说拓扑就是某个集合上 <strong>开子集</strong> 组成的集合。</p>
+
+<p>需要注意的是 <strong>定义开子集的过程是定义拓扑，一个拓扑配上它的集合就称作一个拓扑空间(Topological Space)</strong> 。</p>
+
+<p>选取拓扑的过程中 <strong>必须满足</strong> 下面的三个条件：</p>
+
+<ol>
+<li>全集和空集属于拓扑</li>
+<li>有限个开子集之交还是开子集</li>
+<li>任意个开子集之并还是开子集</li>
+</ol>
+
+<p>同一个集合可以选取不同的拓扑，只要满足上面的三个条件就能称作它的拓扑空间。</p>
+
+<h2 id="诱导拓扑-induced-topology">诱导拓扑(Induced Topology)</h2>
+
+<p>对于集合$A$中的子集$V$，称下面的集合为拓扑$T$的诱导拓扑：</p>
+
+<p><img src="https://BlauHimmel.github.io/img/post/differential-geometry-note1-topology-and-homeomorphism/img-0.png" alt="" /></p>
+
+<h2 id="连续性-continuity">连续性(Continuity)</h2>
+
+<p>对于一个从一个拓扑空间$T$到另一个拓扑空间$T&rsquo;$的上映射，如果拓扑空间$T&rsquo;$上的开子集如果它的在$T$上的逆像也是开子集，则称这个映射是$C^0$连续的。</p>
+
+<h2 id="同胚-homomorphism">同胚(Homomorphism)</h2>
+
+<p>对于一个从$X$到$Y$上的映射：</p>
+
+<ul>
+<li><p>如果$Y$上的任意像$y$在$X$上的逆像$x$的个数不多于一个(可以为0个)，则称这个映射是 <strong>One to one</strong> 映射。</p></li>
+
+<li><p>如果$Y$上的任意元素$y$在$X$一定存在逆像，则称这个映射是 <strong>Onto</strong> 映射。</p></li>
+</ul>
+
+<p>如果两个拓扑空间$T$和$T&rsquo;$之间存在一个映射，它是 <strong>One to one</strong> 和 <strong>Onto</strong> 映射，并且该映射和它的逆映射即是$C^0$连续，则称这两个拓扑空间是互相 <strong>同胚(homomorphism)</strong>的，这个映射是 <strong>同胚映射</strong>。</p></article>
+    <footer class="post-footer">
       
-      
+      <ul class="post-tags">
         
-        <a href="https://BlauHimmel.github.io/tags/polygon-mesh-processing/" class="tag-xxl">polygon-mesh-processing</a>
-      
+          <li><a href="https://BlauHimmel.github.io/tags/%E5%BE%AE%E5%88%86%E5%87%A0%E4%BD%95"><span class="tag">微分几何</span></a></li>
         
-        <a href="https://BlauHimmel.github.io/tags/%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/" class="tag-xxl">阅读笔记</a>
-      
+          <li><a href="https://BlauHimmel.github.io/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0"><span class="tag">学习笔记</span></a></li>
         
-        <a href="https://BlauHimmel.github.io/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" class="tag-xxl">学习笔记</a>
+      </ul>
       
-        
-        <a href="https://BlauHimmel.github.io/tags/lua/" class="tag-xxl">lua</a>
+      <p class="post-copyright">
+        ©Copyright 2018
+      </p>
+    </footer>
+    
       
-        
-        <a href="https://BlauHimmel.github.io/tags/unity3d/" class="tag-xxl">unity3d</a>
-      
-        
-        <a href="https://BlauHimmel.github.io/tags/xlua/" class="tag-xxl">xlua</a>
-      
-        
-        <a href="https://BlauHimmel.github.io/tags/%E5%BE%AE%E5%88%86%E5%87%A0%E4%BD%95/" class="tag-m">微分几何</a>
-      
-    </div>
+    
   </section>
   <footer class="site-footer">
   <p>© 2017-2018 BlauHimmel&#39;s Blog</p>
