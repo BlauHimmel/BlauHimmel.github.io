@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <meta charset="utf-8" />
+
+  
+  <title>Guide to Computational Geometry Processing Foundations 阅读笔记(1) 多边形网格</title>
+
+  
+  
+
+
+
+
+
+  
+  <meta name="author" content="BlauHimmel" />
+  <meta name="description" content="这本书的前4章讲的是纯数学(看的我一脸懵逼). 所以仔细详细还是从&amp;rdquo;正体&amp;rdquo;部分开始看吧, 如果中间碰到问题再往回翻吧. 感觉这书也是硬骨头, , 不知道什么时候才能填完这个坑, 先立个Flag吧.
+
+" />
+
+  
+  
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:site" content="@zhouyuming1104" />
+    <meta name="twitter:title" content="Guide to Computational Geometry Processing Foundations 阅读笔记(1) 多边形网格" />
+    <meta name="twitter:description" content="这本书的前4章讲的是纯数学(看的我一脸懵逼). 所以仔细详细还是从&amp;rdquo;正体&amp;rdquo;部分开始看吧, 如果中间碰到问题再往回翻吧. 感觉这书也是硬骨头, , 不知道什么时候才能填完这个坑, 先立个Flag吧.
+
+" />
+    <meta name="twitter:image" content="https://BlauHimmel.github.io/img/avatar.jpg" />
+  
+
+  
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="Guide to Computational Geometry Processing Foundations 阅读笔记(1) 多边形网格" />
+  <meta property="og:description" content="这本书的前4章讲的是纯数学(看的我一脸懵逼). 所以仔细详细还是从&amp;rdquo;正体&amp;rdquo;部分开始看吧, 如果中间碰到问题再往回翻吧. 感觉这书也是硬骨头, , 不知道什么时候才能填完这个坑, 先立个Flag吧.
+
+" />
+  <meta property="og:url" content="https://BlauHimmel.github.io/post/guide-to-computational-geometry-processing-foundations-note1-polygon-meshes/" />
+  <meta property="og:image" content="https://BlauHimmel.github.io/img/avatar.jpg" />
+
+
+
+
+<meta name="generator" content="Hugo 0.37" />
+
+
+<link rel="canonical" href="https://BlauHimmel.github.io/post/guide-to-computational-geometry-processing-foundations-note1-polygon-meshes/" />
+<link rel="alternative" href="https://BlauHimmel.github.io/index.xml" title="BlauHimmel&#39;s Blog" type="application/atom+xml" />
+
+
+<meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta name="format-detection" content="telephone=no,email=no,adress=no" />
+<meta http-equiv="Cache-Control" content="no-transform" />
+
+
+<meta name="robots" content="index,follow" />
+<meta name="referrer" content="origin-when-cross-origin" />
+
+
+
+
+
+
+
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="BlauHimmel&#39;s Blog" />
+<meta name="msapplication-tooltip" content="BlauHimmel&#39;s Blog" />
+<meta name='msapplication-navbutton-color' content="#5fbf5e" />
+<meta name="msapplication-TileColor" content="#5fbf5e" />
+<meta name="msapplication-TileImage" content="/img/tile-image-windows.png" />
+<link rel="icon" href="https://BlauHimmel.github.io/img/favicon.ico" />
+<link rel="icon" type="image/png" sizes="16x16" href="https://BlauHimmel.github.io/img/favicon-16x16.png" />
+<link rel="icon" type="image/png" sizes="32x32" href="https://BlauHimmel.github.io/img/favicon-32x32.png" />
+<link rel="icon" sizes="192x192" href="https://BlauHimmel.github.io/img/touch-icon-android.png" />
+<link rel="apple-touch-icon" href="https://BlauHimmel.github.io/img/touch-icon-apple.png" />
+<link rel="mask-icon" href="https://BlauHimmel.github.io/img/safari-pinned-tab.svg" color="#5fbf5e" />
+
+
+
+<link rel="stylesheet" href="//cdn.bootcss.com/video.js/6.2.8/alt/video-js-cdn.min.css" />
+
+<link rel="stylesheet" href="https://BlauHimmel.github.io/css/bundle.css" />
+
+
+  
+  <!--[if lt IE 9]>
+    <script src="//cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="//cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <script src="//cdn.bootcss.com/video.js/6.2.8/ie8/videojs-ie8.min.js"></script>
+  <![endif]-->
+
+<!--[if lte IE 11]>
+    <script src="//cdn.bootcss.com/classlist/1.1.20170427/classList.min.js"></script>
+  <![endif]-->
+
+
+<script src="//cdn.bootcss.com/object-fit-images/3.2.3/ofi.min.js"></script>
+
+
+<script src="//cdn.bootcss.com/smooth-scroll/12.1.4/js/smooth-scroll.polyfills.min.js"></script>
+
+
+</head>
+  <body>
+    
+    <div class="suspension">
+      <a title="Go to top" class="to-top is-hide"><span class="icon icon-up"></span></a>
+      
+        
+      
+    </div>
+    
+    
+  <header class="site-header">
+  <img class="avatar" src="https://BlauHimmel.github.io/img/avatar.png" alt="Avatar">
+  
+  <h2 class="title">BlauHimmel&#39;s Blog</h2>
+  
+  <p class="subtitle">A lazy programmer who is interested in game developing and computer graphic...</p>
+  <button class="menu-toggle" type="button">
+    <span class="icon icon-menu"></span>
+  </button>
+  <nav class="site-menu collapsed">
+    <h2 class="offscreen">Main Menu</h2>
+    <ul class="menu-list">
+      
+      
+      
+      
+        <li class="menu-item
+            
+            
+            
+              is-active
+            ">
+            <a href="https://BlauHimmel.github.io/">Home</a>
+          </li>
+      
+        <li class="menu-item
+            
+            
+            ">
+            <a href="https://BlauHimmel.github.io/tags/">Tags</a>
+          </li>
+      
+        <li class="menu-item
+            
+            
+            ">
+            <a href="https://BlauHimmel.github.io/about/">About</a>
+          </li>
+      
+    </ul>
+  </nav>
+  <nav class="social-menu collapsed">
+    <h2 class="offscreen">Social Networks</h2>
+    <ul class="social-list">
+
+      
+      <li class="social-item">
+        <a href="mailto:zhouyuming1104@qq.com" title="Email"><span class="icon icon-email"></span></a>
+      </li>
+
+      
+      <li class="social-item">
+        <a href="//github.com/BlauHimmel" title="GitHub"><span class="icon icon-github"></span></a>
+      </li>
+
+      <li class="social-item">
+        <a href="//twitter.com/zhouyuming1104" title="Twitter"><span class="icon icon-twitter"></span></a>
+      </li>
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <li class="social-item">
+        <a href="https://BlauHimmel.github.io/index.xml"><span class="icon icon-rss" title="RSS"></span></a>
+      </li>
+
+    </ul>
+  </nav>
+</header>
+
+  <section class="main post-detail">
+    <header class="post-header">
+      <h1 class="post-title">Guide to Computational Geometry Processing Foundations 阅读笔记(1) 多边形网格</h1>
+      <p class="post-meta">@BlauHimmel · Mar 3, 2018 · 2 min read</p>
+    </header>
+    <article class="post-content"><p>这本书的前4章讲的是纯数学(看的我一脸懵逼). 所以仔细详细还是从&rdquo;正体&rdquo;部分开始看吧, 如果中间碰到问题再往回翻吧. 感觉这书也是硬骨头, , 不知道什么时候才能填完这个坑, 先立个Flag吧.</p>
+
+<p></p>
+
+<h1 id="多边形以及三角形网格基础">多边形以及三角形网格基础</h1>
+
+<p>对于一个多边形网格实体:</p>
+
+<ul>
+<li>可以说是 面$F$的集合, 边$E$的集合以及点$V$的集合. 其中准确地说$E$和$V$是面$F$上的边和点.</li>
+<li>顶点$i$在空间中对应点的位置记为$\mathbf{p}_i$.</li>
+<li>全部顶点的个数记为$|V|$, 对于边和面同理.</li>
+<li>记与顶点$i$相邻顶点的集合为$N_i$, 即对于顶点$i$, 满足边$ij$是三角形网格上的边这一条件的顶点$j$组成的集合.</li>
+<li>与顶点$i$相邻顶点的数目记作$|N_i|$, 称作顶点i的 <strong>顶点价(Valence)</strong>.</li>
+<li>一个顶点的&rdquo;<em>One-Ring</em>&ldquo;是共享这个顶点多边形的集合, 与改顶点相邻的顶点也被称为是 <em>One-Ring</em> 相邻的(如下图所示).</li>
+</ul>
+
+
+<figure>
+    
+        <img src="https://BlauHimmel.github.io/img/post/Guide-To-Computational-Geometry-Processing-Foundations-note1-polygon-meshes/img-0.PNG" />
+    
+    
+    <figcaption>
+        <h4>顶点以及它的one-ring</h4>
+        
+    </figcaption>
+    
+</figure>
+
+
+<p>很多算法都要求网格是一个符合直觉观念的曲面, 说准确一点就是要求网格表示的是一个 <strong>流形(Manifold)</strong> .</p>
+
+<p>换句话说就是, 曲面任意足够小的区域都存在一个到单位圆盘(Unit Disk)上的可逆映射(即该映射是One-to-one并且是Onto的). 两个三角形的公共边上的一个点就满足这个条件, 而三个三角形的公共边则不满足这个条件, 另外两个只有一个公共点的三角形也不满足这个条件.</p>
+
+
+<figure>
+    
+        <img src="https://BlauHimmel.github.io/img/post/Guide-To-Computational-Geometry-Processing-Foundations-note1-polygon-meshes/img-1.PNG" />
+    
+    
+    <figcaption>
+        <h4>不是2维流形的两个三角形网格</h4>
+        
+    </figcaption>
+    
+</figure>
+
+
+<p>三角形网格是流形的 <strong>条件</strong> 为: 面只能交与边或者点, 边只能被一个或者两个面共享(取决这条边是处于内部还是处于边界上); 一个点周围的面只能是单循环(Single Cycle)的.</p>
+
+<p>上述条件成立的前提是, 网格不能够出现自相交, 否则这会违反&rdquo;面只能交与边或者点&rdquo;这个条件. 其它的不合法的情形如两个只有一条边连接的立方体或者两个只有尖尖部分相连接的椎体.</p>
+
+<h1 id="多边形模型的来源以及问题">多边形模型的来源以及问题</h1>
+
+<p>多边形模型数据的来源主要有以下三种形式</p>
+
+<ul>
+<li>2维空间上的散点. 这些通常来源于采集的地形数据, 这些数据拥有的特征能够使其能够被投影到2维空间上, 并且在平面上被三角剖分(通常使用Delaunay三角剖分). 这些数据都能够被看作是对高度函数$f:R^2 \rightarrow R$进行的采样.</li>
+<li>3维空间上的三点. 这些通常指哪些复杂的3维曲面, 这些曲面因为其拓扑结构未知, 不能很容易的拍平为平面曲面. 常见的作法是将其转换为下列的隐式表示的形式.</li>
+<li>隐式曲面. 对于等值$\tau$以及函数$\Phi:R^3 \rightarrow R$, 可以得到曲面$S=\Phi^{-1}(\tau)$. 在2维空间上, 等值$\tau$以及$\Phi$对应的是一条闭合曲线, 而在3维空间上对应的是一个Watertight的曲面(不透水的闭合曲面). 另一个隐式曲面的来源诸如CT或者是MRI(核磁共振)之类的体积数据.</li>
+</ul>
+
+<p>对于产生的多边形模型, 我们一般将其视为 <em>离散的集合信号</em> . 这些网格的连接性以及拓扑信息都有可能会受到信号噪声的影响, 归结起来有下面几点:</p>
+
+<ul>
+<li>过采样(Oversampling): 由于采样的时候并没有区分物体的集合细节度的高低, 这就会导致生成的几何模型带有了很多不必要的数据.</li>
+<li>采样不足(Undersampling): 由于同样的原因, 对一些小尺度的几何特征和尖锐的边角的采样会存在不足, 这回导致最终得到的网格中会存在锯齿.</li>
+<li>非正则(Irregularity): 对于完全正则的三角形网格, 所以顶点的顶点价(Valence)都是6, 但是只有圆环或者平面是完全正则的. 然而在高度正则化的网格上, 顶点价(Valence)不为6的顶点数目较少. 因为很多的算法对高度正则化的网格有着较好的亲和性, 所以改善网格的正则性是必不可少的. 一般将一些不太好的三角形分为Needles(针头)和Caps(帽子)两类. 前者指存在一个非常非常短的边的三角形, 后者指的是存在一个接近180°内角的三角形.</li>
+<li>拓扑问题(Topological Issues): 受扫描仪器的限制, 得到的网格往往是一块一块的, 并不是一个整体. 极端情况下还有可能出现独立存在的三角形. 最终得到网格可能是一个流行, 但是其亏格数(Genus)可能多于预期.</li>
+</ul>
+
+<h1 id="对多边形网格的操作">对多边形网格的操作</h1>
+
+<h2 id="edge-collapse">Edge Collapse</h2>
+
+<p>如图所示, 该操作移除了一条边以及和这条边相邻的两个面. 因为Edge Collapse能够减小网格的复杂度, 所以常被用在网格简化算法中(如QSlim算法).</p>
+
+
+<figure>
+    
+        <img src="https://BlauHimmel.github.io/img/post/Guide-To-Computational-Geometry-Processing-Foundations-note1-polygon-meshes/img-2.PNG" />
+    
+    
+    <figcaption>
+        <h4>Edge Collapse以及它的逆操作Vertex Split</h4>
+        
+    </figcaption>
+    
+</figure>
+
+
+<p>Edge Collapse可以看作将两个顶点焊接在一起，并且两个顶点并不一定要是相连的. 如果允许焊接两个不相连的顶点, 就有可能会导致非流形(Non-Manifold)网格的出现. 因为对于被焊接在一起后的新顶点来说, 它存在两个不相连接的one-ring. 如果希望避免这种情况出现, 就应该限制Edge Collapse操作只能对相连接的顶点执行, 并进行下面的测试:</p>
+
+<ol>
+<li><p>找到与被Collapse的边的两个端点相邻的所有顶点. 如果与该边相邻的面是三角形, 不在该边上的角将会被两个端点连在一起, 这样就是合法的, 因为Collapse后这两个三角形就会消失. 而其它所有的一个顶点和待Collapse边的两个端点相邻的情况(非三角形网格)都是非法的, 因为这会导致一个顶点和焊接后的新顶点之间存在两条边.</p></li>
+
+<li><p>如果所有与待Collapse边相邻的面都是三角形, 且边的端点的顶点价(Valence)为3, 则该物体是一个四面体, Collapse操作会使四面体退化.</p></li>
+
+<li><p>如果所有与待Collapse边相邻的面都是三角形, 它们在操作后会消失, 且三角形上除这条边上的两个端点外的另一个顶点的顶点价(Valence)会减少1.</p></li>
+
+<li><p>对于两个连接两个边界环(Boundary Loops)的边, 一般是不允许进行Collapse操作的, 因为这会构造出一个8字形.</p></li>
+</ol>
+
+<hr />
+
+<p>其中第三条的原文是</p>
+
+<blockquote>
+<p>If a face adjacent to the edge being collapsed is a triangle, it will disappear, and
+the valence of the final vertex belonging to this edge will be reduced by one.
+If the valence of this vertex is three it will be reduced to two. If the remaining
+two faces in the 1-ring of this vertex are triangles, they will become coplanar. If
+the faces are not triangles we may wish to allow the collapse since valence two
+vertices could be considered legal.</p>
+</blockquote>
+
+<p>这个地方我想了好久, 感觉莫名奇妙, 为什么Collapse后余下的两个面如果是三角形它们就共面? 不是三角形则可以操作？ 且顶点价(Valence)等于2合法对应的前提条件是什么? 这里都没有说清楚.</p>
+
+<hr />
+
+<h2 id="vertex-split">Vertex Split</h2>
+
+<p>Vertex Split是Edge Collapse的逆操作, 后者降低复杂度, 而前者则带来更多的几何细节.</p>
+
+<h2 id="edge-flip">Edge Flip</h2>
+
+<p>Edge Flip操作移除掉一条边后, 在产生的四边形的对角上添加一条新的边. 通过该操作能够显著的改善网格的正则性(Regularity). 需要注意的是, 某些情况下执行Edge Flip操作会导致非流形(Non-Manifold)网格的产生.</p>
+
+
+<figure>
+    
+        <img src="https://BlauHimmel.github.io/img/post/Guide-To-Computational-Geometry-Processing-Foundations-note1-polygon-meshes/img-3.PNG" />
+    
+    
+</figure>
+
+
+<h2 id="edge-split">Edge Split</h2>
+
+<p>Edge Split操作在边上插入一个顶点, 并且在该顶点和与该边相邻的两个三角形的与该边相对的顶点之间插入两条新的边.</p>
+
+
+<figure>
+    
+        <img src="https://BlauHimmel.github.io/img/post/Guide-To-Computational-Geometry-Processing-Foundations-note1-polygon-meshes/img-4.PNG" />
+    
+    
+</figure>
+
+
+<h2 id="face-split">Face Split</h2>
+
+<p>Face Split操作在三角形内插入一个顶点, 并且在该顶点和三角形三个顶点之间插入三条边.</p>
+
+
+<figure>
+    
+        <img src="https://BlauHimmel.github.io/img/post/Guide-To-Computational-Geometry-Processing-Foundations-note1-polygon-meshes/img-5.PNG" />
+    
+    
+</figure>
+
+
+<h1 id="多边形网格的表示">多边形网格的表示</h1>
+
+<p>多边形网格最简单的表示方法即使直接存储每一个顶点的位置, 但是点与点之间的连接性确无从知晓, 这样我们就无法根据存储的信息直接对网格进行操作.</p>
+
+<p>一个更为使用且简单的方法是将网格的信息用顶点集合和面索引集合来表示. 对于每一个顶点, 在顶点集合中存储它的相关集合属性. 然后在面索引集合中用索引来引用顶点集合中的元素来表述网格中的每一个面.</p>
+
+
+<figure>
+    
+        <img src="https://BlauHimmel.github.io/img/post/Guide-To-Computational-Geometry-Processing-Foundations-note1-polygon-meshes/img-6.PNG" />
+    
+    
+</figure>
+
+
+<p>但是上述的表示方法还是存在一些问题, 如果我们需要知道某两个的公共边或者某一个顶点的相邻的顶点, 则需要去遍历所有的面.</p>
+
+<p>为了能够快速的查询这些信息, 一种方法是创建其它的数组去存储顶点的相邻信息(如对于某一个顶点, 所有包含该顶点的面). 另外一种方法是通过存储网格中的边来间接地存储相邻信息, 但是这也意味着当网格被修改的时候我们需要去维护这些辅助地数据结构.</p>
+
+
+<figure>
+    
+        <img src="https://BlauHimmel.github.io/img/post/Guide-To-Computational-Geometry-Processing-Foundations-note1-polygon-meshes/img-7.PNG" />
+    
+    
+</figure>
+
+
+<p>上图展示了翼边数据结构(Winged Edge Data Structure), 对于每一个边, 存储了其在顺时针和逆时针方向上的前一个边和后一个边, 该边所相邻的两个面和两个顶点.</p>
+
+<p>注意到当我们想要从一个边前进到其下一个边的时候, 需要考虑是按照顺时针的方向还是按照逆时针的方向, 这使得在遍历某一个面(Circulate a face)的时候需要插入条件判断语句(If&hellip;Else&hellip;), 在现今的处理器架构中, 如果对于分支的预测失败, 则已经执行的命令将会被丢弃, 这在一定程度上会影响到程序的性能. 正是由于这些原因, 翼边数据结构已经被半边数据结构(Halfedge Data Structure)所取代.</p>
+
+<h1 id="半边数据结构-halfedge-data-structure">半边数据结构(Halfedge Data Structure)</h1>
+
+<p>半边数据结构用两条半边来表示一条实际的边, 每一个半边对应了与该边相邻的一个面, 这样在对半边进行遍历的时候顺序就是唯一的了. 同样地, 使用这种数据结构也能够很方便地遍历一个顶点周围的所有的边, 给定一个顶点$v$:</p>
+
+<ol>
+<li>通过顶点$v$, 可以得到从$v$出发的半边的指针$h_0$</li>
+<li>通过$h_0$可以得到半边$h_0$指向的顶点$w$($w$与$v$相邻)</li>
+<li>通过和$h_0$方向相反的(Opposite)的半边$h_0&rsquo;$, 可以得到从顶点$v$出发, 指向下一个与$v$相邻顶点的半边$h_1$</li>
+<li>反复执行步骤2到步骤3直到回到最初的半边$h_0$</li>
+</ol>
+
+
+<figure>
+    
+        <img src="https://BlauHimmel.github.io/img/post/Guide-To-Computational-Geometry-Processing-Foundations-note1-polygon-meshes/img-8.PNG" />
+    
+    
+    <figcaption>
+        <h4>通过一条半边可以得到与它方向相反的另一条半边, 其指向的顶点, 其上一条和下一条半边以及半边所处的面.</h4>
+        
+    </figcaption>
+    
+</figure>
+
+
+<p>在一些几何库(如OpenMesh, CGAL等)中会提供一种特殊的叫Circulators遍历方式, 通过这种遍历方式能够按照顺序遍历一个面的所有半边或者从某个顶点出发的所有半边.</p>
+
+<h1 id="quad-edge-data-structure">Quad-Edge Data Structure</h1>
+
+<p>Quad-Edge Data Structure只能够被用来表示流形(Manifold), Quad-Edge Data Structure中有顶点, 边和面, 其中边是Quad-Edge Data Structure中最重要的, 它存储了全部的拓扑信息. 而顶点和面存储的都是多余信息.</p>
+
+<p>通过将边旋转90度, 用顶点代替面, 用面代替顶点, 我们能够得到原网格的对偶(Dual)网格, 如立方体的对偶是八面体, 而四面体的对偶是另一个四面体.</p>
+
+<p>所谓Quad-Edge, 指的是边自身, 它的对称(取反方向), 它的对偶, 它的对偶的对称:</p>
+
+
+<figure>
+    
+        <img src="https://BlauHimmel.github.io/img/post/Guide-To-Computational-Geometry-Processing-Foundations-note1-polygon-meshes/img-11.PNG" />
+    
+    
+</figure>
+
+
+<p>通过每一条边我们能够索引到下面的信息:</p>
+
+
+<figure>
+    
+        <img src="https://BlauHimmel.github.io/img/post/Guide-To-Computational-Geometry-Processing-Foundations-note1-polygon-meshes/img-9.PNG" />
+    
+    
+</figure>
+
+
+
+<figure>
+    
+        <img src="https://BlauHimmel.github.io/img/post/Guide-To-Computational-Geometry-Processing-Foundations-note1-polygon-meshes/img-10.PNG" />
+    
+    
+</figure>
+
+
+<p>Quad-Edge Data Structure通过存储四倍多余的信息, 在表示和处理涉及到对偶结构的2维流形(如Voronoi图和Delaunay三角剖分)时十分方便.</p>
+
+<p>对于Quad-Edge Data Structure, 只需要下面两种基本的拓扑操作就能完成全部的创建(Construction)和修改(Modification)需求:</p>
+
+
+<figure>
+    
+        <img src="https://BlauHimmel.github.io/img/post/Guide-To-Computational-Geometry-Processing-Foundations-note1-polygon-meshes/img-12.PNG" />
+    
+    
+</figure></article>
+    <footer class="post-footer">
+      
+      <ul class="post-tags">
+        
+          <li><a href="https://BlauHimmel.github.io/tags/guide-to-computational-geometry-processing-foundations"><span class="tag">Guide to Computational Geometry Processing Foundations</span></a></li>
+        
+          <li><a href="https://BlauHimmel.github.io/tags/%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0"><span class="tag">阅读笔记</span></a></li>
+        
+      </ul>
+      
+      <p class="post-copyright">
+        ©Copyright 2018
+      </p>
+    </footer>
+    
+      
+    
+  </section>
+  <footer class="site-footer">
+  <p>© 2017-2018 BlauHimmel&#39;s Blog</p>
+  <p>Powered by <a href="https://gohugo.io/" target="_blank">Hugo</a> with theme <a href="https://github.com/laozhu/hugo-nuo" target="_blank">Nuo</a>.</p>
+  
+</footer>
+
+
+
+<script async src="//cdn.bootcss.com/video.js/6.2.8/alt/video.novtt.min.js"></script>
+<script async src="//cdn.bootcss.com/mathjax/2.7.2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [['$','$'], ['\\(','\\)']],
+      displayMath: [['$$','$$'], ['\[','\]']],
+      processEscapes: true,
+      processEnvironments: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+      TeX: { equationNumbers: { autoNumber: "AMS" },
+      extensions: ["AMSmath.js", "AMSsymbols.js"] }
+    }
+  });
+</script>
+<script type="text/x-mathjax-config">
+  // Fix <code> tags after MathJax finishes running. This is a
+  // hack to overcome a shortcoming of Markdown. Discussion at
+  // https://github.com/mojombo/jekyll/issues/199
+  MathJax.Hub.Queue(() => {
+    MathJax.Hub.getAllJax().map(v => v.SourceElement().parentNode.className += ' has-jax');
+  });
+</script>
+
+<script src="https://BlauHimmel.github.io/js/bundle.js"></script>
+
+
+
+
+  </body>
+</html>
