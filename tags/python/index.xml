@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Python on BlauHimmel&#39;s Blog</title>
+    <link>https://BlauHimmel.github.io/tags/python/</link>
+    <description>Recent content in Python on BlauHimmel&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <copyright>©Copyright 2018</copyright>
+    <lastBuildDate>Mon, 09 Apr 2018 13:50:20 +0800</lastBuildDate>
+    
+	<atom:link href="https://BlauHimmel.github.io/tags/python/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>在Windows上使用Wheel安装Python库</title>
+      <link>https://BlauHimmel.github.io/post/python-library-install-using-wheel/</link>
+      <pubDate>Mon, 09 Apr 2018 13:50:20 +0800</pubDate>
+      
+      <guid>https://BlauHimmel.github.io/post/python-library-install-using-wheel/</guid>
+      <description>&lt;p&gt;Python的有些库(如Numpy)在Windows上使用pip直接安装的时候需要进行编译, 编译的过程很有可能报出各种各样的错误, 处理起来比较麻烦. 使用Wheel进行安装相对会更简单方便一些.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

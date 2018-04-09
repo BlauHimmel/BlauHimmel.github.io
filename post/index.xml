@@ -7,10 +7,21 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
     <copyright>©Copyright 2018</copyright>
-    <lastBuildDate>Sat, 03 Mar 2018 13:14:20 +0800</lastBuildDate>
+    <lastBuildDate>Mon, 09 Apr 2018 13:50:20 +0800</lastBuildDate>
     
 	<atom:link href="https://BlauHimmel.github.io/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>在Windows上使用Wheel安装Python库</title>
+      <link>https://BlauHimmel.github.io/post/python-library-install-using-wheel/</link>
+      <pubDate>Mon, 09 Apr 2018 13:50:20 +0800</pubDate>
+      
+      <guid>https://BlauHimmel.github.io/post/python-library-install-using-wheel/</guid>
+      <description>&lt;p&gt;Python的有些库(如Numpy)在Windows上使用pip直接安装的时候需要进行编译, 编译的过程很有可能报出各种各样的错误, 处理起来比较麻烦. 使用Wheel进行安装相对会更简单方便一些.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
     
     <item>
       <title>Guide to Computational Geometry Processing Foundations 阅读笔记(1) 多边形网格</title>

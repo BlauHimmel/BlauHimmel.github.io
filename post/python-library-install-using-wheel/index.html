@@ -5,10 +5,7 @@
   <meta charset="utf-8" />
 
   
-  <title>
-  Posts
-   | BlauHimmel&#39;s Blog
-</title>
+  <title>在Windows上使用Wheel安装Python库</title>
 
   
   
@@ -19,22 +16,28 @@
 
   
   <meta name="author" content="BlauHimmel" />
-  <meta name="description" content="" />
+  <meta name="description" content="Python的有些库(如Numpy)在Windows上使用pip直接安装的时候需要进行编译, 编译的过程很有可能报出各种各样的错误, 处理起来比较麻烦. 使用Wheel进行安装相对会更简单方便一些.
+
+" />
 
   
   
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:site" content="@yu_mi_blau" />
-    <meta name="twitter:title" content="Posts" />
-    <meta name="twitter:description" content="" />
+    <meta name="twitter:title" content="在Windows上使用Wheel安装Python库" />
+    <meta name="twitter:description" content="Python的有些库(如Numpy)在Windows上使用pip直接安装的时候需要进行编译, 编译的过程很有可能报出各种各样的错误, 处理起来比较麻烦. 使用Wheel进行安装相对会更简单方便一些.
+
+" />
     <meta name="twitter:image" content="https://BlauHimmel.github.io/img/avatar.jpg" />
   
 
   
   <meta property="og:type" content="article" />
-  <meta property="og:title" content="Posts" />
-  <meta property="og:description" content="" />
-  <meta property="og:url" content="https://BlauHimmel.github.io/post/" />
+  <meta property="og:title" content="在Windows上使用Wheel安装Python库" />
+  <meta property="og:description" content="Python的有些库(如Numpy)在Windows上使用pip直接安装的时候需要进行编译, 编译的过程很有可能报出各种各样的错误, 处理起来比较麻烦. 使用Wheel进行安装相对会更简单方便一些.
+
+" />
+  <meta property="og:url" content="https://BlauHimmel.github.io/post/python-library-install-using-wheel/" />
   <meta property="og:image" content="https://BlauHimmel.github.io/img/avatar.jpg" />
 
 
@@ -43,7 +46,7 @@
 <meta name="generator" content="Hugo 0.37" />
 
 
-<link rel="canonical" href="https://BlauHimmel.github.io/post/" />
+<link rel="canonical" href="https://BlauHimmel.github.io/post/python-library-install-using-wheel/" />
 <link rel="alternative" href="https://BlauHimmel.github.io/index.xml" title="BlauHimmel&#39;s Blog" type="application/atom+xml" />
 
 
@@ -106,6 +109,8 @@
     
     <div class="suspension">
       <a title="Go to top" class="to-top is-hide"><span class="icon icon-up"></span></a>
+      
+        
       
     </div>
     
@@ -213,52 +218,37 @@
   </nav>
 </header>
 
-  <section class="main post-list">
-    <header class="list-header offscreen">
-      <h2 class="list-label">Posts List</h2>
+  <section class="main post-detail">
+    <header class="post-header">
+      <h1 class="post-title">在Windows上使用Wheel安装Python库</h1>
+      <p class="post-meta">@BlauHimmel · Apr 9, 2018 · 1 min read</p>
     </header>
-    
-    
-      
-        <article class="post-entry">
-  <header class="post-header">
-    <h3 class="post-title"><a href="https://BlauHimmel.github.io/post/polygon-mesh-processing-note1-surface/" class="post-link">Polygon Mesh Processing 阅读笔记(1) 曲面的表示</a></h3>
-    <p class="post-meta">@BlauHimmel · Feb 28, 2018 · 1 min read</p>
-  </header>
-  
-  <p class="post-summary">
-</p>
-  <footer class="post-footer">
-    <a class="read-more" href="https://BlauHimmel.github.io/post/polygon-mesh-processing-note1-surface/">Read More →</a>
-  </footer>
-</article>
+    <article class="post-content"><p>Python的有些库(如Numpy)在Windows上使用pip直接安装的时候需要进行编译, 编译的过程很有可能报出各种各样的错误, 处理起来比较麻烦. 使用Wheel进行安装相对会更简单方便一些.</p>
 
-      
-        <article class="post-entry">
-  <header class="post-header">
-    <h3 class="post-title"><a href="https://BlauHimmel.github.io/post/hello-world/" class="post-link">Hello World</a></h3>
-    <p class="post-meta">@BlauHimmel · Feb 28, 2018 · 1 min read</p>
-  </header>
-  
-  <p class="post-summary">弄了半天终于搞定了..
-以后慢慢把之前写的笔记心得什么的搬运过来</p>
-  <footer class="post-footer">
-    <a class="read-more" href="https://BlauHimmel.github.io/post/hello-world/">Read More →</a>
-  </footer>
-</article>
+<p></p>
 
+<p>首先安装Wheel</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cmd" data-lang="cmd">pip install wheel</code></pre></div>
+<p>然后到这里下载对应的whl文件</p>
+
+<p><a href="https://www.lfd.uci.edu/~gohlke/pythonlibs/#numpy">Unofficial Windows Binaries for Python Extension Packages</a></p>
+
+<p>最后使用下面的命令安装下载下来的库文件即可</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cmd" data-lang="cmd">pip install xxxx.whl</code></pre></div></article>
+    <footer class="post-footer">
       
+      <ul class="post-tags">
+        
+          <li><a href="https://BlauHimmel.github.io/tags/python"><span class="tag">Python</span></a></li>
+        
+      </ul>
+      
+      <p class="post-copyright">
+        ©Copyright 2018
+      </p>
+    </footer>
     
-    
-      <footer class="list-footer">
-        <nav class="pagination">
-          <h3 class="offscreen">Pagination</h3>
-          
-            <a class="pagination-previous" href="https://BlauHimmel.github.io/post/">← Newer Posts</a>
-          
-          
-        </nav>
-      </footer>
+      
     
   </section>
   <footer class="site-footer">

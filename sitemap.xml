@@ -8,6 +8,11 @@
   </url>
   
   <url>
+    <loc>https://BlauHimmel.github.io/post/python-library-install-using-wheel/</loc>
+    <lastmod>2018-04-09T13:50:20+08:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://BlauHimmel.github.io/post/guide-to-computational-geometry-processing-foundations-note1-polygon-meshes/</loc>
     <lastmod>2018-03-03T13:14:20+08:00</lastmod>
   </url>
@@ -118,7 +123,13 @@
   
   <url>
     <loc>https://BlauHimmel.github.io/post/</loc>
-    <lastmod>2018-03-03T13:14:20+08:00</lastmod>
+    <lastmod>2018-04-09T13:50:20+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://BlauHimmel.github.io/tags/python/</loc>
+    <lastmod>2018-04-09T13:50:20+08:00</lastmod>
     <priority>0</priority>
   </url>
   
